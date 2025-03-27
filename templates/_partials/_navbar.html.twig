@@ -1,0 +1,20 @@
+<header style="padding: 1rem; background: #f5f5f5;">
+	<nav style="display: flex; justify-content: space-between;">
+		<div>
+			<strong>Cameleon Learning</strong>
+		</div>
+		<div>
+			<a href="{{ path('homepage') }}">Accueil</a>
+			|
+			<a href="{{ path('app_formations') }}">Formations</a>
+			|
+			{% if app.user %}
+				<a href="{{ path('app_logout') }}">Déconnexion</a>
+			{% else %}
+				<a href="{{ path('app_login') }}">Connexion</a>
+				|
+				<a href="{{ path('app_register') }}">Inscription</a>
+			{% endif %}
+		</div>
+	</nav>
+</header>
