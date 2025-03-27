@@ -16,6 +16,18 @@ class AnswerRepository extends ServiceEntityRepository
         parent::__construct($registry, Answer::class);
     }
 
+    /**
+     * Récupère toutes les réponses d’une question donnée
+     */
+    public function findByQuestion(int $questionId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.question = :id')
+            ->setParameter('id', $questionId)
+            ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Answer[] Returns an array of Answer objects
 //     */

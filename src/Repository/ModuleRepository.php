@@ -16,6 +16,19 @@ class ModuleRepository extends ServiceEntityRepository
         parent::__construct($registry, Module::class);
     }
 
+    /**
+     * Récupère tous les modules d'une formation donnée
+     */
+    public function findByFormation(int $formationId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.formation = :id')
+            ->setParameter('id', $formationId)
+            ->orderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Module[] Returns an array of Module objects
 //     */

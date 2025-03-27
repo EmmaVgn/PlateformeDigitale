@@ -16,6 +16,18 @@ class QuizRepository extends ServiceEntityRepository
         parent::__construct($registry, Quiz::class);
     }
 
+    /**
+     * Récupère tous les quiz liés à une formation donnée
+     */
+    public function findByFormation(int $formationId): array
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.formation = :id')
+            ->setParameter('id', $formationId)
+            ->orderBy('q.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Quiz[] Returns an array of Quiz objects
 //     */

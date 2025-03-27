@@ -16,6 +16,18 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
+    /**
+     * Récupère toutes les questions d’un quiz donné
+     */
+    public function findByQuiz(int $quizId): array
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.quiz = :id')
+            ->setParameter('id', $quizId)
+            ->orderBy('q.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */
