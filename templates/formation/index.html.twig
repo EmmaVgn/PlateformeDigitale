@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formations
+{% endblock %}
+
+{% block body %}
+	<h1>Nos Formations</h1>
+
+	<div class="formations">
+		{% for formation in formations %}
+			<div class="formation-card">
+				<h2>{{ formation.title }}</h2>
+				<p>{{ formation.description|slice(0, 150) ~ '...' }}</p>
+				<a href="{{ path('app_formation_show', { slug: formation.slug }) }}">Voir plus</a>
+			</div>
+		{% else %}
+			<p>Aucune formation disponible pour le moment.</p>
+		{% endfor %}
+	</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ formation.title }}
+{% endblock %}
+
+{% block body %}
+	<h1>{{ formation.title }}</h1>
+
+	<p>{{ formation.description }}</p>
+
+	<h2>Modules</h2>
+	{% if formation.modules|length > 0 %}
+		<ul>
+			{% for module in formation.modules %}
+				<li>
+					<h3>{{ module.title }}</h3>
+					<p>{{ module.content|nl2br }}</p>
+					{% if module.file %}
+						<a href="{{ asset('uploads/files/' ~ module.file) }}" target="_blank">Télécharger</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>Aucun module pour cette formation.</p>
+	{% endif %}
+
+	<h2>Quiz</h2>
+	{% if formation.quizzes|length > 0 %}
+		<ul>
+			{% for quiz in formation.quizzes %}
+				<li>
+					{{ quiz.title }}
+					<a href="#">Lancer le quiz</a>
+					{# lien à définir plus tard #}
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>Pas de quiz associé pour le moment.</p>
+	{% endif %}
+{% endblock %}
