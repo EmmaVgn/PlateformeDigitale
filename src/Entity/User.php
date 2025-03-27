@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -45,6 +47,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
+
+    /**
+     * @var Collection<int, UserFormation>
+     */
+    #[ORM\OneToMany(targetEntity: UserFormation::class, mappedBy: 'User')]
+    private Collection $userFormations;
+
+    public function __construct()
+    {
+        $this->userFormations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -164,6 +177,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFormation>
+     */
+    public function getUserFormations(): Collection
+    {
+        return $this->userFormations;
+    }
+
+    public function addUserFormation(UserFormation $userFormation): static
+    {
+        if (!$this->userFormations->contains($userFormation)) {
+            $this->userFormations->add($userFormation);
+            $userFormation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFormation(UserFormation $userFormation): static
+    {
+        if ($this->userFormations->removeElement($userFormation)) {
+            // set the owning side to null (unless already changed)
+            if ($userFormation->getUser() === $this) {
+                $userFormation->setUser(null);
+            }
+        }
 
         return $this;
     }

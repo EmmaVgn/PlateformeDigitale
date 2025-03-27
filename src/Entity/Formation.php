@@ -46,10 +46,17 @@ class Formation
     #[ORM\OneToMany(targetEntity: Quiz::class, mappedBy: 'formation')]
     private Collection $quizzes;
 
+    /**
+     * @var Collection<int, UserFormation>
+     */
+    #[ORM\OneToMany(targetEntity: UserFormation::class, mappedBy: 'formation')]
+    private Collection $userFormations;
+
     public function __construct()
     {
         $this->modules = new ArrayCollection();
         $this->quizzes = new ArrayCollection();
+        $this->userFormations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +190,36 @@ class Formation
             // set the owning side to null (unless already changed)
             if ($quiz->getFormation() === $this) {
                 $quiz->setFormation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserFormation>
+     */
+    public function getUserFormations(): Collection
+    {
+        return $this->userFormations;
+    }
+
+    public function addUserFormation(UserFormation $userFormation): static
+    {
+        if (!$this->userFormations->contains($userFormation)) {
+            $this->userFormations->add($userFormation);
+            $userFormation->setFormation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFormation(UserFormation $userFormation): static
+    {
+        if ($this->userFormations->removeElement($userFormation)) {
+            // set the owning side to null (unless already changed)
+            if ($userFormation->getFormation() === $this) {
+                $userFormation->setFormation(null);
             }
         }
 
