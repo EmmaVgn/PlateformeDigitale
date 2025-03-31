@@ -48,15 +48,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
-    /**
-     * @var Collection<int, UserFormation>
-     */
-    #[ORM\OneToMany(targetEntity: UserFormation::class, mappedBy: 'User')]
-    private Collection $userFormations;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserFormation::class)]
+    private Collection $formationsSuivies;
 
     public function __construct()
     {
-        $this->userFormations = new ArrayCollection();
+        $this->formationsSuivies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,33 +178,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, UserFormation>
-     */
-    public function getUserFormations(): Collection
-    {
-        return $this->userFormations;
-    }
 
-    public function addUserFormation(UserFormation $userFormation): static
+    public function addFormationSuivie(UserFormation $formationSuivie): static
     {
-        if (!$this->userFormations->contains($userFormation)) {
-            $this->userFormations->add($userFormation);
-            $userFormation->setUser($this);
+        if (!$this->formationsSuivies->contains($formationSuivie)) {
+            $this->formationsSuivies->add($formationSuivie);
+            $formationSuivie->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeUserFormation(UserFormation $userFormation): static
+    public function removeFormationSuivie(UserFormation $formationSuivie): static
     {
-        if ($this->userFormations->removeElement($userFormation)) {
+        if ($this->formationsSuivies->removeElement($formationSuivie)) {
             // set the owning side to null (unless already changed)
-            if ($userFormation->getUser() === $this) {
-                $userFormation->setUser(null);
+            if ($formationSuivie->getUser() === $this) {
+                $formationSuivie->setUser(null);
             }
         }
 
         return $this;
     }
+    
 }

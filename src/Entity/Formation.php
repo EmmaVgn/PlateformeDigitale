@@ -46,17 +46,16 @@ class Formation
     #[ORM\OneToMany(targetEntity: Quiz::class, mappedBy: 'formation')]
     private Collection $quizzes;
 
-    /**
-     * @var Collection<int, UserFormation>
-     */
-    #[ORM\OneToMany(targetEntity: UserFormation::class, mappedBy: 'formation')]
-    private Collection $userFormations;
+
+    #[ORM\OneToMany(mappedBy: 'formation', targetEntity: UserFormation::class)]
+    private Collection $inscriptions;
+
 
     public function __construct()
     {
         $this->modules = new ArrayCollection();
         $this->quizzes = new ArrayCollection();
-        $this->userFormations = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,30 +195,32 @@ class Formation
         return $this;
     }
 
+
+
     /**
      * @return Collection<int, UserFormation>
      */
-    public function getUserFormations(): Collection
+    public function getInscriptions(): Collection
     {
-        return $this->userFormations;
+        return $this->inscriptions;
     }
 
-    public function addUserFormation(UserFormation $userFormation): static
+    public function addInscription(UserFormation $inscription): static
     {
-        if (!$this->userFormations->contains($userFormation)) {
-            $this->userFormations->add($userFormation);
-            $userFormation->setFormation($this);
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setFormation($this);
         }
 
         return $this;
     }
 
-    public function removeUserFormation(UserFormation $userFormation): static
+    public function removeInscription(UserFormation $inscription): static
     {
-        if ($this->userFormations->removeElement($userFormation)) {
+        if ($this->inscriptions->removeElement($inscription)) {
             // set the owning side to null (unless already changed)
-            if ($userFormation->getFormation() === $this) {
-                $userFormation->setFormation(null);
+            if ($inscription->getFormation() === $this) {
+                $inscription->setFormation(null);
             }
         }
 

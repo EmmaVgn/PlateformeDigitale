@@ -14,16 +14,16 @@ class UserFormation
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userFormations')]
-    private ?User $User = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'userFormations')]
     private ?Formation $formation = null;
 
     #[ORM\Column]
-    private ?int $progression = null;
+    private ?int $progression = 0;
 
     #[ORM\Column]
-    private ?bool $isCompleted = null;
+    private ?bool $isCompleted = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $dateInscription = null;
@@ -40,12 +40,12 @@ class UserFormation
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
     public function setUser(?User $User): static
     {
-        $this->User = $User;
+        $this->user = $User;
 
         return $this;
     }
