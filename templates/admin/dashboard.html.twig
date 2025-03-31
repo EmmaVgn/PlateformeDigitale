@@ -1,0 +1,23 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+	<div style="max-width: 1000px; margin: 0 auto; padding: 2rem;">
+		<h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 2rem;">
+			Bienvenue dans l'espace administrateur 👋
+		</h1>
+
+		<div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+			<div style="width: 300px; padding: 1.5rem; border-radius: 1rem; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+				<h2 style="font-size: 1.2rem; font-weight: 600;">Gérer les formations</h2>
+				<p>Ajoutez, éditez ou supprimez les formations proposées.</p>
+				<a href="{{ path('admin', { crudControllerFqcn: 'App\\Controller\\Admin\\FormationCrudController' }) }}" class="btn btn-primary mt-2">Accéder</a>
+			</div>
+
+			<div style="width: 300px; padding: 1.5rem; border-radius: 1rem; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+				<h2 style="font-size: 1.2rem; font-weight: 600;">Suivi des utilisateurs</h2>
+				<p>Consultez les utilisateurs et leur progression.</p>
+				<a href="{{ path('admin', { crudControllerFqcn: 'App\\Controller\\Admin\\UserCrudController' }) }}" class="btn btn-primary mt-2">Voir les utilisateurs</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

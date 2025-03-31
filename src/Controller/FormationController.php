@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Repository\FormationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use App\Entity\UserFormation;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FormationController extends AbstractController
@@ -32,6 +35,8 @@ class FormationController extends AbstractController
             'formation' => $formation,
         ]);
     }
+
+    #
 
 }
 

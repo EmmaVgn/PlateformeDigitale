@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class DashboardController extends AbstractController{
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/profile', name: 'app_dashboard')]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
