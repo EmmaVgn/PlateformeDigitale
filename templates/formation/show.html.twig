@@ -6,6 +6,26 @@
 
 {% block body %}
 	<h1>{{ formation.title }}</h1>
+	{% if app.user %}
+		{% if inscription %}
+			<div style="padding: 1rem; border: 1px solid #cce5ff; background-color: #e6f0ff; margin-bottom: 1rem;">
+				✅ Vous êtes inscrit(e) à cette formation.
+				{% if inscription.progression > 0 %}
+					<br>📊 Progression :
+					{{ inscription.progression }}%
+				{% endif %}
+			</div>
+		{% else %}
+			<form method="post" action="{{ path('formation_inscription', { slug: formation.slug }) }}">
+				<button type="submit">S'inscrire à cette formation</button>
+			</form>
+		{% endif %}
+	{% else %}
+		<p>
+			<a href="{{ path('app_login') }}">Connectez-vous</a>
+			pour vous inscrire.</p>
+	{% endif %}
+
 
 	<p>{{ formation.description }}</p>
 
