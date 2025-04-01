@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}Cameleon Solutions Learning
-			{% endblock %}
-		</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Cameleon Solutions Learning{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link
-		rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>">
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>'">
 
-		{# Feuille de style principale #}
-		{% block stylesheets %}
-			<link rel="stylesheet" href="{{ asset('assets/app.css') }}">
-		{% endblock %}
+    {% block stylesheets %}
+  
+		
+    {% endblock %}
 
-		{# Scripts JS #}
-		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap('app') }}
-			{% endblock %}
-		{% endblock %}
-	</head>
-	<body>
-		{% include '_partials/_navbar.html.twig' %}
+    {% block javascripts %}
+        {% block importmap %}
+            {{ importmap('app') }}
+        {% endblock %}
+    {% endblock %}
+</head>
 
-		<main style="padding: 2rem;"> {% block body %}{% endblock %}
-			</main>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
 
-			{% include '_partials/_footer.html.twig' %}
-		</body>
-	</html>
+    {% include '_partials/_navbar.html.twig' %}
+
+    <main class="flex-1 container mx-auto px-4 py-8">
+        {% block body %}{% endblock %}
+    </main>
+
+    {% include '_partials/_footer.html.twig' %}
+
+</body>
+</html>

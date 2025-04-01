@@ -1,20 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Formations
-{% endblock %}
+{% block title %}Formations{% endblock %}
 
 {% block body %}
-	<h1>Nos Formations</h1>
+	<div class="max-w-6xl mx-auto px-4 py-8">
+		<h1 class="text-2xl font-bold text-gray-800 mb-6">Nos Formations</h1>
 
-	<div class="formations">
-		{% for formation in formations %}
-			<div class="formation-card">
-				<h2>{{ formation.title }}</h2>
-				<p>{{ formation.description|slice(0, 150) ~ '...' }}</p>
-				<a href="{{ path('app_formation_show', { slug: formation.slug }) }}">Voir plus</a>
+		{% if formations|length > 0 %}
+			<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+				{% for formation in formations %}
+					<div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex flex-col justify-between">
+						<div>
+							<h2 class="text-lg font-semibold text-gray-800 mb-2">{{ formation.title }}</h2>
+							<p class="text-sm text-gray-600 mb-4">
+								{{ formation.description|slice(0, 150) ~ '...' }}
+							</p>
+						</div>
+						<div>
+							<a href="{{ path('app_formation_show', { slug: formation.slug }) }}"
+							   class="inline-block bg-indigo-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700">
+								Voir plus
+							</a>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
 		{% else %}
-			<p>Aucune formation disponible pour le moment.</p>
-		{% endfor %}
+			<p class="text-gray-600">Aucune formation disponible pour le moment.</p>
+		{% endif %}
 	</div>
 {% endblock %}

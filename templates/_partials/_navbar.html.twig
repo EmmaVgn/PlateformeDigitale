@@ -1,20 +1,38 @@
-<header style="padding: 1rem; background: #f5f5f5;">
-	<nav style="display: flex; justify-content: space-between;">
-		<div>
-			<strong>Cameleon Learning</strong>
-		</div>
-		<div>
-			<a href="{{ path('homepage') }}">Accueil</a>
-			|
-			<a href="{{ path('app_formations') }}">Formations</a>
-			|
-			{% if app.user %}
-				<a href="{{ path('app_logout') }}">Déconnexion</a>
-			{% else %}
-				<a href="{{ path('app_login') }}">Connexion</a>
-				|
-				<a href="{{ path('app_register') }}">Inscription</a>
-			{% endif %}
-		</div>
-	</nav>
+<header class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="text-xl font-bold text-indigo-600">
+            <a href="{{ path('homepage') }}">Cameleon Learning</a>
+        </div>
+
+        <button class="lg:hidden text-gray-700" id="mobile-menu-toggle">
+            ☰
+        </button>
+
+        <nav class="hidden lg:flex space-x-6 items-center" id="navbar-links">
+            <a href="{{ path('homepage') }}" class="text-gray-700 hover:text-indigo-600">Accueil</a>
+            <a href="{{ path('app_formations') }}" class="text-gray-700 hover:text-indigo-600">Formations</a>
+
+            {% if app.user %}
+                <a href="{{ path('profile') }}" class="text-gray-700 hover:text-indigo-600">Tableau de bord</a>
+                <a href="{{ path('app_logout') }}" class="text-gray-700 hover:text-red-600">Déconnexion</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-indigo-600">Connexion</a>
+                <a href="{{ path('app_register') }}" class="text-gray-700 hover:text-indigo-600">Inscription</a>
+            {% endif %}
+        </nav>
+    </div>
+
+    {# Menu mobile #}
+    <div id="mobile-menu" class="hidden flex-col space-y-2 px-4 pb-4 lg:hidden">
+        <a href="{{ path('homepage') }}" class="block text-gray-700 hover:text-indigo-600">Accueil</a>
+        <a href="{{ path('app_formations') }}" class="block text-gray-700 hover:text-indigo-600">Formations</a>
+
+        {% if app.user %}
+            <a href="{{ path('profile') }}" class="block text-gray-700 hover:text-indigo-600">Tableau de bord</a>
+            <a href="{{ path('app_logout') }}" class="block text-red-600 hover:underline">Déconnexion</a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="block text-gray-700 hover:text-indigo-600">Connexion</a>
+            <a href="{{ path('app_register') }}" class="block text-gray-700 hover:text-indigo-600">Inscription</a>
+        {% endif %}
+    </div>
 </header>
