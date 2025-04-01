@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Special+Elite&display=swap");
+
+body {
+  font-family: "Roboto Slab", serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Special Elite", cursive;
+}
+
+@keyframes backgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animated {
+  background: linear-gradient(135deg, #032b35, #1b4f5f, #064663);
+  background-size: 200% 200%;
+  animation: backgroundAnimation 10s ease infinite;
+}

@@ -1,3 +1,57 @@
-<footer class="text-center py-4 bg-gray-100 text-gray-700 text-sm">
-	&copy; {{ "now"|date("Y") }} Cameleon Solutions Learning
+<footer class="bg-[#f5f5e9] text-[#032b35] text-sm py-8 mt-10">
+	<div
+		class="container mx-auto px-4 pl-8 md:pl-16 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+
+		{# Colonne 1 : Logo Caméléon + texte #}
+		<div class="flex items-center gap-4">
+			<img src="{{ asset('img/Cameleon-noir.svg') }}" alt="Caméléon Solutions Learning" class="h-[84px] w-auto brightness-100 contrast-125">
+
+			<span class="font-title text-lg leading-tight text-primary">
+				Caméléon<br>Solutions Learning
+			</span>
+		</div>
+
+		{# Colonne 2 : Contact #}
+		<div>
+			<h4 class="font-semibold mb-2">Contact</h4>
+			<p class="mb-1">📞 06 69 28 48 62</p>
+			<p class="mb-1">📧
+				<a href="mailto:contact@cameleon-solutions.fr" class="underline hover:text-[#085669]">
+					contact@cameleon-solutions.fr
+				</a>
+			</p>
+			<p>📍 Lot-et-Garonne, France</p>
+		</div>
+
+		{# Colonne 3 : Liens utiles #}
+		<div>
+			<h4 class="font-semibold mb-2">Liens utiles</h4>
+			<ul class="space-y-1">
+				<li>
+					<a href="{{ path('homepage') }}" class="hover:underline hover:text-[#085669]">Accueil</a>
+				</li>
+				<li>
+					<a href="{{ path('app_formations') }}" class="hover:underline hover:text-[#085669]">Formations</a>
+				</li>
+				{% if is_granted('ROLE_ADMIN') %}
+					<li>
+						<a href="{{ path('admin') }}" class="hover:underline hover:text-[#085669]">Admin</a>
+					</li>
+				{% endif %}
+				<li>
+					<a href="#" class="hover:underline hover:text-[#085669]">Mentions légales</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="mt-6 text-center text-xs text-[#032b35]/70 px-4">
+		<p class="mb-2">
+			Caméléon Solutions Learning est un organisme de formation certifié Qualiopi avec la BGE Incubatest.
+		</p>
+		<img src="{{ asset('img/qualiopiBGE.jpeg') }}" alt="Logo Qualiopi BGE" class="h-16 w-auto mx-auto mb-2">
+		&copy;
+		{{ "now"|date("Y") }}
+		Caméléon Solutions Learning – Tous droits réservés.
+	</div>
 </footer>

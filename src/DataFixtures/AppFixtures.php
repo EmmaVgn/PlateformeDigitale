@@ -41,52 +41,65 @@ class AppFixtures extends Fixture
         $user->setPassword($this->hasher->hashPassword($user, 'userpass'));
         $manager->persist($user);
 
-        // FORMATION
-        $formation = new Formation();
-        $formation->setTitle('Débuter avec Symfony')
-            ->setSlug('debuter-avec-symfony')
-            ->setDescription('Une formation d’introduction à Symfony pour les débutants.')
-            ->setIsPublished(true)
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setUpdatedAt(new \DateTimeImmutable());
-        $manager->persist($formation);
-
-        // MODULES
-        $module1 = (new Module())
-            ->setTitle("Introduction")
-            ->setContent("Présentation de Symfony")
-            ->setFile("intro.pdf")
-            ->setFormation($formation);
-        $manager->persist($module1);
-
-        // QUIZ
-        $quiz = (new Quiz())
-            ->setTitle("Quiz de démarrage")
-            ->setFormation($formation);
-        $manager->persist($quiz);
-
-        // QUESTION + RÉPONSES
-        $question = (new Question())
-            ->setContent("Symfony est un...")
-            ->setQuiz($quiz);
-        $manager->persist($question);
-
-        foreach (['Framework PHP', 'Navigateur Web', 'Base de données'] as $i => $text) {
-            $answer = (new Answer())
-                ->setContent($text)
-                ->setIsCorrect($i === 0)
-                ->setQuestion($question);
-            $manager->persist($answer);
+        $formationsData = [
+            ['title' => 'Maîtriser les bases de HTML & CSS', 'slug' => 'maitriser-les-bases-de-html-css', 'description' => 'Apprenez à créer des sites web modernes avec HTML et CSS.'],
+            ['title' => 'Introduction à JavaScript moderne', 'slug' => 'introduction-a-javascript-moderne', 'description' => 'Un parcours pour comprendre les fondamentaux de JavaScript.'],
+            ['title' => 'Créer son site avec WordPress', 'slug' => 'creer-son-site-avec-wordpress', 'description' => 'Utilisez WordPress pour créer un site facilement.'],
+            ['title' => 'Développement PHP avancé', 'slug' => 'developpement-php-avance', 'description' => 'Approfondissez vos compétences en PHP.'],
+            ['title' => 'Initiation à la cybersécurité', 'slug' => 'initiation-a-la-cybersecurite', 'description' => 'Sensibilisation aux bonnes pratiques en cybersécurité.'],
+        ];
+        
+        foreach ($formationsData as $index => $data) {
+            $formation = new Formation();
+            $formation->setTitle($data['title'])
+                ->setSlug($data['slug'])
+                ->setDescription($data['description'])
+                ->setIsPublished(true)
+                ->setCreatedAt(new \DateTimeImmutable())
+                ->setUpdatedAt(new \DateTimeImmutable());
+            $manager->persist($formation);
+        
+            // Module
+            $module = new Module();
+            $module->setTitle("Module 1 - Introduction")
+                ->setContent("Introduction au thème de la formation : " . $data['title'])
+                ->setFile("module{$index}.pdf")
+                ->setFormation($formation);
+            $manager->persist($module);
+        
+            // Quiz
+            $quiz = new Quiz();
+            $quiz->setTitle("Quiz - " . $data['title'])
+                ->setFormation($formation);
+            $manager->persist($quiz);
+        
+            // Question
+            $question = new Question();
+            $question->setContent("Question d'introduction à la formation : " . $data['title'])
+                ->setQuiz($quiz);
+            $manager->persist($question);
+        
+            // Réponses
+            foreach (['Bonne réponse', 'Fausse réponse 1', 'Fausse réponse 2'] as $i => $answerText) {
+                $answer = new Answer();
+                $answer->setContent($answerText)
+                    ->setIsCorrect($i === 0)
+                    ->setQuestion($question);
+                $manager->persist($answer);
+            }
+        
+            // Inscription utilisateur uniquement à la 1ère formation
+            if ($index === 0) {
+                $userFormation = new UserFormation();
+                $userFormation->setUser($user)
+                    ->setFormation($formation)
+                    ->setProgression(0)
+                    ->setIsCompleted(false);
+                $manager->persist($userFormation);
+            }
         }
-
-        // INSCRIPTION
-        $userFormation = (new UserFormation())
-            ->setUser($user)
-            ->setFormation($formation)
-            ->setProgression(0)
-            ->setIsCompleted(false);
-        $manager->persist($userFormation);
-
+        // Flush all data to the database
         $manager->flush();
     }
 }
+        
