@@ -2,25 +2,41 @@
 
 namespace App\Controller;
 
-use App\Repository\FormationRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use App\Entity\UserFormation;
+use App\Repository\FormationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FormationController extends AbstractController
 {
     #[Route('/formations', name: 'app_formations')]
-    public function index(FormationRepository $formationRepository): Response
+    public function index(FormationRepository $formationRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $formations = $formationRepository->findBy(['isPublished' => true]);
-
+        $queryBuilder = $formationRepository->createQueryBuilder('f')
+            ->where('f.isPublished = true');
+    
+        if ($request->query->get('q')) {
+            $queryBuilder
+                ->andWhere('f.title LIKE :q OR f.description LIKE :q')
+                ->setParameter('q', '%' . $request->query->get('q') . '%');
+        }
+    
+        $formations = $paginator->paginate(
+            $queryBuilder->getQuery(),
+            $request->query->getInt('page', 1),
+            6
+        );
+    
         return $this->render('formation/index.html.twig', [
             'formations' => $formations,
         ]);
     }
+    
 
     #[Route('/formation/{slug}', name: 'app_formation_show')]
     public function show(string $slug, FormationRepository $formationRepository): Response

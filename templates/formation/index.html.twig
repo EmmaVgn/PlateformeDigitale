@@ -1,29 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Formations{% endblock %}
+{% block title %}Formations
+{% endblock %}
 
 {% block body %}
 	<div class="max-w-6xl mx-auto px-4 py-8">
 		<h1 class="text-2xl font-bold text-gray-800 mb-6">Nos Formations</h1>
 
+		<form method="get" action="{{ path('app_formations') }}" class="mb-6 flex gap-2">
+			<input type="text" name="q" value="{{ app.request.get('q') }}" placeholder="Rechercher une formation..." class="border border-gray-300 rounded-lg px-4 py-2 w-full">
+			<button type="submit" class="bg-hover text-white px-4 py-2 rounded hover:bg-secondary">Rechercher</button>
+		</form>
+
 		{% if formations|length > 0 %}
 			<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+				{% set now = "now"|date("U") %}
 				{% for formation in formations %}
-					<div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex flex-col justify-between">
+					{% set createdAt = formation.createdAt|date("U") %}
+					{% set isNew = (now - createdAt) < 604800 %}
+					<div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
 						<div>
+							{% if isNew %}
+								<span class="inline-block bg-green-500 text-white text-xs font-bold px-2 py-1 rounded mb-2">Nouveau</span>
+							{% endif %}
 							<h2 class="text-lg font-semibold text-gray-800 mb-2">{{ formation.title }}</h2>
 							<p class="text-sm text-gray-600 mb-4">
 								{{ formation.description|slice(0, 150) ~ '...' }}
 							</p>
 						</div>
 						<div>
-							<a href="{{ path('app_formation_show', { slug: formation.slug }) }}"
-							   class="inline-block bg-indigo-600 text-white text-sm px-4 py-2 rounded hover:bg-indigo-700">
-								Voir plus
+							<a href="{{ path('app_formation_show', { slug: formation.slug }) }}" class="inline-block text-white bg-primary px-5 py-2 text-sm rounded-md font-body border border-white hover:bg-secondary hover:border-[#085669] transition">
+								Voir la formation
 							</a>
+
+
 						</div>
 					</div>
 				{% endfor %}
+			</div>
+
+			<div class="mt-8">
+				{{ knp_pagination_render(formations) }}
 			</div>
 		{% else %}
 			<p class="text-gray-600">Aucune formation disponible pour le moment.</p>

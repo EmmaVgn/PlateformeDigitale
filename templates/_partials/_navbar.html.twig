@@ -1,52 +1,49 @@
 <header class="bg-light shadow-md font-body text-primary">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+	<div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
-        <a href="{{ path('homepage') }}" class="flex items-center space-x-2">
-            <img src="{{ asset('img/Cameleon-noir.svg') }}" alt="Logo" class="h-12 w-auto">
-            <span class="text-lg font-title text-primary">Caméléon Solutions Learning</span>
-        </a>
+		<a href="{{ path('homepage') }}" class="flex items-center space-x-2">
+			<img src="{{ asset('img/Cameleon-noir.svg') }}" alt="Logo" class="h-12 w-auto">
+			<span class="text-lg font-title text-primary">Caméléon Solutions Learning</span>
+		</a>
 
-        <div class="hidden lg:flex flex-1 justify-center items-center gap-6">
-            <nav class="flex gap-6">
-                <a href="{{ path('homepage') }}" class="hover:text-hover">Accueil</a>
-                <a href="{{ path('app_formations') }}" class="hover:text-hover">Formations</a>
-            </nav>
-            <form method="get" action="#" class="flex items-center">
-                <input type="text" name="q" placeholder="Rechercher des formations…" class="border border-gray-300 rounded-lg px-4 py-2 w-80">
-                <button type="submit" class="bg-primary text-white rounded-lg px-4 py-2 ml-2 hover:bg-hover">Rechercher</button>
-            </form>
-        </div>
+		<div class="hidden lg:flex flex-1 justify-center items-center gap-6">
+			<nav class="flex gap-6">
+				<a href="{{ path('homepage') }}" class="hover:text-hover">Accueil</a>
+				<a href="{{ path('app_formations') }}" class="hover:text-hover">Formations</a>
 
-        <div class="hidden lg:flex items-center space-x-4">
-            {% if app.user %}
-                <span class="text-sm">Bonjour, {{ app.user.firstname }}</span>
-                <a href="{{ path('profile') }}" class="hover:text-hover">📊 Tableau de bord</a>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('admin') }}" class="hover:text-hover">🛠️ Admin</a>
-                {% endif %}
-                <a href="{{ path('app_logout') }}" class="text-red-600 hover:underline">Déconnexion</a>
-            {% else %}
-                <a href="{{ path('app_login') }}" class="hover:text-hover">Connexion</a>
-                <a href="{{ path('app_register') }}" class="hover:text-hover">Inscription</a>
-            {% endif %}
-        </div>
 
-        <button class="lg:hidden text-primary" id="mobile-menu-toggle">☰</button>
-    </div>
+				{% if app.user %}
+					<span class="text-sm">Bonjour,
+						{{ app.user.firstname }}</span>
+					<a href="{{ path('profile') }}" class="hover:text-hover">📊 Tableau de bord</a>
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="{{ path('admin') }}" class="hover:text-hover">🛠️ Admin</a>
+					{% endif %}
+					<a href="{{ path('app_logout') }}" class="text-red-600 hover:underline">Déconnexion</a>
+				{% else %}
+					<a href="{{ path('app_login') }}" class="hover:text-hover">Connexion</a>
+					<a href="{{ path('app_register') }}" class="hover:text-hover">Inscription</a>
+				{% endif %}
+			</nav>
+		</div>
 
-    <div class="lg:hidden hidden flex-col space-y-2 px-4 pb-4" id="mobile-menu">
-        <a href="{{ path('homepage') }}" class="hover:text-hover">Accueil</a>
-        <a href="{{ path('app_formations') }}" class="hover:text-hover">Formations</a>
-        {% if app.user %}
-            <span class="text-sm">Bonjour, {{ app.user.firstname }}</span>
-            <a href="{{ path('profile') }}" class="hover:text-hover">📊 Tableau de bord</a>
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('admin') }}" class="hover:text-hover">🛠️ Admin</a>
-            {% endif %}
-            <a href="{{ path('app_logout') }}" class="text-red-600 hover:underline">Déconnexion</a>
-        {% else %}
-            <a href="{{ path('app_login') }}" class="hover:text-hover">Connexion</a>
-            <a href="{{ path('app_register') }}" class="hover:text-hover">Inscription</a>
-        {% endif %}
-    </div>
+		<button class="lg:hidden text-primary" id="mobile-menu-toggle">☰</button>
+	</div>
+
+	<div class="lg:hidden hidden flex-col space-y-2 px-4 pb-4" id="mobile-menu">
+		<a href="{{ path('homepage') }}" class="hover:text-hover">Accueil</a>
+		<a href="{{ path('app_formations') }}" class="hover:text-hover">Formations</a>
+		{% if app.user %}
+			<span class="text-sm">Bonjour,
+				{{ app.user.firstname }}</span>
+			<a href="{{ path('profile') }}" class="hover:text-hover">📊 Tableau de bord</a>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('admin') }}" class="hover:text-hover">🛠️ Admin</a>
+			{% endif %}
+			<a href="{{ path('app_logout') }}" class="text-red-600 hover:underline">Déconnexion</a>
+		{% else %}
+			<a href="{{ path('app_login') }}" class="hover:text-hover">Connexion</a>
+			<a href="{{ path('app_register') }}" class="hover:text-hover">Inscription</a>
+		{% endif %}
+	</div>
 </header>
