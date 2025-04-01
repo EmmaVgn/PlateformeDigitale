@@ -48,13 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserFormation::class)]
-    private Collection $formationsSuivies;
-
-    public function __construct()
-    {
-        $this->formationsSuivies = new ArrayCollection();
-    }
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $formationsSouhaitees = null;
 
     public function getId(): ?int
     {
@@ -178,27 +173,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
-    public function addFormationSuivie(UserFormation $formationSuivie): static
+    public function getFormationsSouhaitees(): ?string
     {
-        if (!$this->formationsSuivies->contains($formationSuivie)) {
-            $this->formationsSuivies->add($formationSuivie);
-            $formationSuivie->setUser($this);
-        }
+        return $this->formationsSouhaitees;
+    }
 
+    public function setFormationsSouhaitees(?string $formationsSouhaitees): self
+    {
+        $this->formationsSouhaitees = $formationsSouhaitees;
         return $this;
     }
 
-    public function removeFormationSuivie(UserFormation $formationSuivie): static
-    {
-        if ($this->formationsSuivies->removeElement($formationSuivie)) {
-            // set the owning side to null (unless already changed)
-            if ($formationSuivie->getUser() === $this) {
-                $formationSuivie->setUser(null);
-            }
-        }
-
-        return $this;
-    }
     
 }

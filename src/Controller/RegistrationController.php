@@ -16,6 +16,7 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -25,33 +26,48 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
+            // Encode le mot de passe
             $plainPassword = $form->get('plainPassword')->getData();
-
-            // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
+            // Enregistre le nouvel utilisateur
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
+            // Envoie l'email de confirmation
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('contact@cameleon-solutions.fr', 'Caméléon Solutions Learning'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->to($user->getEmail())
+                    ->subject('Confirmez votre adresse email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
-            // do anything else you need here, like send an email
+            // Envoie une notification à l'admin
+            $adminNotification = (new TemplatedEmail())
+                ->from(new Address('contact@cameleon-solutions.fr', 'Caméléon Solutions Learning'))
+                ->to('contact@cameleon-solutions.fr') // 👈 ou ton email admin
+                ->subject('Nouvelle inscription sur Caméléon Learning')
+                ->htmlTemplate('emails/new_registration.html.twig')
+                ->context([
+                    'user' => $user,
+                    'formationsSouhaitees' => $form->get('formationsSouhaitees')->getData() ?? null,
+                ]);
+            $mailer->send($adminNotification);
 
+            // Connexion automatique après l'inscription
             return $security->login($user, LoginFormAuthenticator::class, 'main');
         }
 
@@ -65,20 +81,21 @@ class RegistrationController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             /** @var User $user */
             $user = $this->getUser();
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+            $this->addFlash('verify_email_error', $translator->trans(
+                $exception->getReason(),
+                [],
+                'VerifyEmailBundle'
+            ));
 
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_register');
+        $this->addFlash('success', 'Votre adresse email a bien été confirmée.');
+        return $this->redirectToRoute('app_formations');
     }
 }

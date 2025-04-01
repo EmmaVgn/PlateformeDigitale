@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250327095113 extends AbstractMigration
+final class Version20250401152405 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -36,6 +36,15 @@ final class Version20250327095113 extends AbstractMigration
             CREATE TABLE quiz (id INT AUTO_INCREMENT NOT NULL, formation_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, INDEX IDX_A412FA925200282E (formation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
+            CREATE TABLE `user` (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, is_verified TINYINT(1) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE TABLE user_formation (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, formation_id INT DEFAULT NULL, progression INT NOT NULL, is_completed TINYINT(1) NOT NULL, date_inscription DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', INDEX IDX_40A0AC5BA76ED395 (user_id), INDEX IDX_40A0AC5B5200282E (formation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', available_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', delivered_at DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        SQL);
+        $this->addSql(<<<'SQL'
             ALTER TABLE answer ADD CONSTRAINT FK_DADD4A251E27F6BF FOREIGN KEY (question_id) REFERENCES question (id)
         SQL);
         $this->addSql(<<<'SQL'
@@ -46,6 +55,12 @@ final class Version20250327095113 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE quiz ADD CONSTRAINT FK_A412FA925200282E FOREIGN KEY (formation_id) REFERENCES formation (id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE user_formation ADD CONSTRAINT FK_40A0AC5BA76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE user_formation ADD CONSTRAINT FK_40A0AC5B5200282E FOREIGN KEY (formation_id) REFERENCES formation (id)
         SQL);
     }
 
@@ -65,6 +80,12 @@ final class Version20250327095113 extends AbstractMigration
             ALTER TABLE quiz DROP FOREIGN KEY FK_A412FA925200282E
         SQL);
         $this->addSql(<<<'SQL'
+            ALTER TABLE user_formation DROP FOREIGN KEY FK_40A0AC5BA76ED395
+        SQL);
+        $this->addSql(<<<'SQL'
+            ALTER TABLE user_formation DROP FOREIGN KEY FK_40A0AC5B5200282E
+        SQL);
+        $this->addSql(<<<'SQL'
             DROP TABLE answer
         SQL);
         $this->addSql(<<<'SQL'
@@ -78,6 +99,15 @@ final class Version20250327095113 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             DROP TABLE quiz
+        SQL);
+        $this->addSql(<<<'SQL'
+            DROP TABLE `user`
+        SQL);
+        $this->addSql(<<<'SQL'
+            DROP TABLE user_formation
+        SQL);
+        $this->addSql(<<<'SQL'
+            DROP TABLE messenger_messages
         SQL);
     }
 }

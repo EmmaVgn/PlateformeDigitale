@@ -1,0 +1,17 @@
+<h2>Nouvel inscrit !</h2>
+
+<p>
+	<strong>Nom :</strong>
+	{{ user.firstname }}
+	{{ user.lastname }}</p>
+<p>
+	<strong>Email :</strong>
+	{{ user.email }}</p>
+<p>
+	<strong>Téléphone :</strong>
+	{{ user.phone }}</p>
+
+{% if user.formationsSouhaitees %}
+	<p>
+		<strong>Formations souhaitées :</strong><br>{{ user.formationsSouhaitees|nl2br }}</p>
+{% endif %}
