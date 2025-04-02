@@ -68,7 +68,9 @@ class RegistrationController extends AbstractController
             $mailer->send($adminNotification);
 
             // Connexion automatique après l'inscription
-            return $security->login($user, LoginFormAuthenticator::class, 'main');
+            $this->addFlash('success', 'Merci pour votre inscription. Un email de confirmation vous a été envoyé.');
+            return $this->redirectToRoute('app_login');
+
         }
 
         return $this->render('registration/register.html.twig', [
@@ -98,4 +100,6 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Votre adresse email a bien été confirmée.');
         return $this->redirectToRoute('app_formations');
     }
+
+    
 }
