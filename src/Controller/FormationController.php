@@ -47,19 +47,26 @@ class FormationController extends AbstractController
             throw $this->createNotFoundException('Formation introuvable.');
         }
 
+        $inscriptionValide = false;
         $inscription = null;
+
         if ($this->getUser()) {
             foreach ($formation->getInscriptions() as $item) {
                 if ($item->getUser() === $this->getUser()) {
                     $inscription = $item;
+                    if ($item->getisValidated()) {
+                        $inscriptionValide = true;
+                    }
                     break;
                 }
             }
         }
 
+
         return $this->render('formation/show.html.twig', [
             'formation' => $formation,
             'inscription' => $inscription,
+            'inscriptionValide' => $inscriptionValide,
         ]);
     }
 

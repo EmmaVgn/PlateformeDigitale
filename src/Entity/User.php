@@ -35,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+    private ?string $plainPassword = null;
 
     #[ORM\Column]
     private bool $isVerified = false;
@@ -50,6 +51,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $formationsSouhaitees = null;
+
+     /**
+     * @var Collection<int, Formation>
+     */
+    #[ORM\ManyToMany(targetEntity: Formation::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: 'user_formations')]
+    private Collection $formations;
+
+    /**
+     * @var Collection<int, UserFormation>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserFormation::class)]
+    private Collection $userFormations;
+
+    public function __construct()
+    {
+        $this->userFormations = new ArrayCollection();
+        $this->formations = new ArrayCollection();
+    }
+
+    /**
+     * Méthode __toString() pour afficher le nom complet de l'utilisateur
+     */
+    public function __toString(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;  // Retourne le prénom et nom
+    }
 
     public function getId(): ?int
     {
@@ -116,6 +144,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
     /**
      * @see UserInterface
      */
@@ -184,5 +222,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    
+        public function getUserFormations(): Collection
+    {
+        return $this->userFormations;
+    }
+
+    public function addUserFormation(UserFormation $userFormation): self
+    {
+        if (!$this->userFormations->contains($userFormation)) {
+            $this->userFormations[] = $userFormation;
+            $userFormation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFormation(UserFormation $userFormation): self
+    {
+        if ($this->userFormations->removeElement($userFormation)) {
+            // set the owning side to null (unless already changed)
+            if ($userFormation->getUser() === $this) {
+                $userFormation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFormations(): Collection
+    {
+        return $this->formations;
+    }
+
+    public function addFormation(Formation $formation): self
+    {
+        if (!$this->formations->contains($formation)) {
+            $this->formations[] = $formation;
+        }
+
+        return $this;
+    }
+
+    public function removeFormation(Formation $formation): self
+    {
+        $this->formations->removeElement($formation);
+
+        return $this;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User; 
 use App\Repository\UserFormationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,10 +14,10 @@ class UserFormation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'userFormations')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userFormations')]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'userFormations')]
+    #[ORM\ManyToOne(targetEntity: Formation::class, inversedBy: 'userFormations')]
     private ?Formation $formation = null;
 
     #[ORM\Column]
@@ -28,6 +29,18 @@ class UserFormation
     #[ORM\Column]
     private ?\DateTimeImmutable $dateInscription = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isValidated = false;
+
+    /**
+     * Méthode __toString() pour afficher une représentation lisible de UserFormation
+     */
+    public function __toString(): string
+    {
+        // Vous pouvez choisir ce que vous souhaitez afficher ici, par exemple :
+        return $this->user->getFirstname() . ' - ' . $this->formation->getTitle();  // Affiche le prénom de l'utilisateur et le titre de la formation
+    }
+    
     public function __construct()
     {
         $this->dateInscription = new \DateTimeImmutable();
@@ -95,6 +108,17 @@ class UserFormation
     {
         $this->dateInscription = $dateInscription;
 
+        return $this;
+    }
+
+    public function getisValidated(): bool
+    {
+        return $this->isValidated;
+    }
+
+    public function setIsValidated(bool $isValidated): static
+    {
+        $this->isValidated = $isValidated;
         return $this;
     }
 }

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de votre inscription
+{% endblock %}
+
+{% block body %}
+	<h1>Félicitations, votre inscription a été validée !</h1>
+
+	<p>Bonjour
+		{{ user.firstname }}
+		{{ user.lastname }},</p>
+
+	<p>Nous sommes heureux de vous informer que votre inscription à la formation "{{ formation.title }}" a été validée.</p>
+
+	<p>Vous pouvez désormais accéder aux modules et au contenu de la formation sur votre espace.</p>
+
+	<p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+
+	<p>Cordialement,<br>
+		L’équipe Caméléon Solutions Learning</p>
+{% endblock %}

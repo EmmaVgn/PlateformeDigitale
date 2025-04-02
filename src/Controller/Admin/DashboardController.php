@@ -6,6 +6,7 @@ use App\Entity\Quiz;
 use App\Entity\User;
 use App\Entity\Module;
 use App\Entity\Formation;
+use App\Entity\UserFormation;   
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -56,7 +57,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Formations', 'fas fa-graduation-cap', Formation::class);
         yield MenuItem::linkToCrud('Modules', 'fas fa-book', Module::class);
         yield MenuItem::linkToCrud('Quiz', 'fas fa-question-circle', Quiz::class);
-        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
+        yield MenuItem::linkToCrud('Inscriptions', 'fas fa-user-check', UserFormation::class);
 
+        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
+        yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'homepage');
     }
 }
