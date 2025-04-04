@@ -10,6 +10,7 @@ module.exports = {
         primary: '#032b35',
         secondary: '#085669',
         light: '#f5f5e9',
+        lightBlue:'#145261',
       },
       fontFamily: {
         title: ['"Special Elite"', 'cursive'],

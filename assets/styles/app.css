@@ -34,3 +34,14 @@ h6 {
   background-size: 200% 200%;
   animation: backgroundAnimation 10s ease infinite;
 }
+
+.sticky-ahref {
+  outline: 2px solid #032b35; /* Contour avec une couleur personnalisée */
+  outline-offset: 4px; /* Déplace l'outline de 4px autour de l'élément */
+  padding: 10px; /* Ajoute de l'espace à l'intérieur du paragraphe */
+}
+
+a.active {
+  border-bottom: 2px solid #032b35;
+  padding-bottom: 5px; /* Ajoute de l'espace en bas du lien */
+}
