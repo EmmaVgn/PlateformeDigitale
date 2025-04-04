@@ -22,3 +22,7 @@ services:
   App\Security\EmailVerifier:
     arguments:
       $verifyEmailHelper: '@SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface'
+
+  App\Service\FileUploader:
+    arguments:
+      $targetDirectory: "%modules_directory%"

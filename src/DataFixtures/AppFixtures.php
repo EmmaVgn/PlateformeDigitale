@@ -59,6 +59,7 @@ class AppFixtures extends Fixture
                 'duree' => '10 heures',
                 'dateFormation' => 'Tout au long de l\'année',
                 'lieu' => 'En ligne',
+                'competences' => ['HTML', 'CSS', 'Web Design'],
             ],
             [
                 'title' => 'Introduction à JavaScript moderne',
@@ -76,6 +77,7 @@ class AppFixtures extends Fixture
                 'duree' => '15 heures',
                 'dateFormation' => 'Tout au long de l\'année',
                 'lieu' => 'En ligne',
+                'competences' => ['JavaScript', 'DOM Manipulation', 'Programmation'],
             ],
             [
                 'title' => 'Création d\'applications web avec React',
@@ -93,6 +95,7 @@ class AppFixtures extends Fixture
                 'duree' => '20 heures',
                 'dateFormation' => 'Démarrage toutes les 4 semaines',
                 'lieu' => 'En ligne',
+                'competences' => ['React', 'JavaScript', 'Redux'],
             ],
             [
                 'title' => 'Développement mobile avec Flutter',
@@ -110,6 +113,7 @@ class AppFixtures extends Fixture
                 'duree' => '30 heures',
                 'dateFormation' => 'Prochain démarrage en mars',
                 'lieu' => 'En ligne',
+                'competences' => ['Flutter', 'Dart', 'Développement mobile'],
             ],
         ];
 
@@ -130,6 +134,7 @@ class AppFixtures extends Fixture
                 ->setDuree($data['duree'])
                 ->setDateFormation($data['dateFormation'])
                 ->setLieu($data['lieu'])
+                ->setCompetences(implode(', ', $data['competences']))  // Implémentation des compétences comme une chaîne de caractères
                 ->setIsPublished(true)
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setUpdatedAt(new \DateTimeImmutable());

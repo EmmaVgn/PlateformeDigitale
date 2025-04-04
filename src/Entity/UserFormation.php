@@ -17,7 +17,7 @@ class UserFormation
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userFormations')]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(targetEntity: Formation::class, inversedBy: 'userFormations')]
+    #[ORM\ManyToOne(targetEntity: Formation::class, inversedBy: 'inscriptions')]
     private ?Formation $formation = null;
 
     #[ORM\Column]
