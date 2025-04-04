@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -23,14 +24,15 @@ class FormationCrudController extends AbstractCrudController
             TextField::new('title'),
             TextareaField::new('description'),
             BooleanField::new('isPublished'),
-            TextField::new('objectifDeFormation'),
-            TextField::new('programme'),
+            TextEditorField::new('objectifDeFormation'),
+            TextEditorField::new('programme'),
+            TextEditorField::new('competences'),
             TextField::new('modaliteAcces'),
             TextField::new('modaliteEvaluation'),
             TextField::new('coutEtFinancement'),
             TextField::new('contact'),
             TextField::new('accessibilite'),
-            TextField::new('publicCible'),
+            TextEditorField::new('publicCible'),
             TextField::new('preRequis'),
             TextField::new('duree'),
             TextField::new('dateFormation'),

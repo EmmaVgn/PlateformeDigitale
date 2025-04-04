@@ -45,3 +45,17 @@ a.active {
   border-bottom: 2px solid #032b35;
   padding-bottom: 5px; /* Ajoute de l'espace en bas du lien */
 }
+
+.text-editor-content ul {
+  list-style-type: disc; /* Afficher les puces rondes */
+  padding-left: 1.5rem; /* Décaler les puces */
+}
+
+.text-editor-content ol {
+  list-style-type: decimal; /* Afficher les numéros */
+  padding-left: 1.5rem;
+}
+
+.text-editor-content li {
+  margin-bottom: 0.5rem; /* Ajouter un espacement entre les éléments de liste */
+}

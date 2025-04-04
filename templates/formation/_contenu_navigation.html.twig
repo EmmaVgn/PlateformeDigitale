@@ -1,0 +1,45 @@
+<div id="details" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Détail</h2>
+	<div class="text-editor-content text-gray-700">
+		<p class="mb-4">{{ formation.description |raw}}</p>
+	</div>
+</div>
+
+<div id="modalite" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Modalités d'accès</h2>
+	<div class="text-editor-content text-gray-700">
+		<p class="mb-4">{{ formation.modaliteAcces |raw}}</p>
+	</div>
+</div>
+
+<div id="localite" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Localité</h2>
+	<p>{{ formation.lieu }}</p>
+</div>
+
+<div id="objectif" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Objectif</h2>
+	<div class="text-editor-content text-gray-700">
+		<p>{{ formation.objectifDeFormation |raw}}</p>
+	</div>
+</div>
+
+<div id="programme" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Programme</h2>
+	<div class="text-editor-content text-gray-700">
+		<p>{{ formation.programme |raw }}</p>
+	</div>
+</div>
+
+
+<div id="prix" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Prix</h2>
+	<p>{{ formation.coutEtFinancement }}
+		€</p>
+</div>
+
+<div id="accessibilite" class="mb-12">
+	<h2 class="text-2xl font-semibold mb-4">Accessibilité</h2>
+	<p>{{ formation.accessibilite }}
+		€</p>
+</div>

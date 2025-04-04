@@ -97,6 +97,9 @@ class Formation
     #[ORM\OneToMany(mappedBy: 'formation', targetEntity: UserFormation::class)]
     private Collection $userFormations;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $competences = null;
+
 
     /**
      * @return string
@@ -475,6 +478,18 @@ class Formation
         if ($this->users->removeElement($user)) {
             $user->removeFormation($this); // Retirer l'association dans l'utilisateur
         }
+
+        return $this;
+    }
+
+    public function getCompetences(): ?string
+    {
+        return $this->competences;
+    }
+
+    public function setCompetences(string $competences): static
+    {
+        $this->competences = $competences;
 
         return $this;
     }

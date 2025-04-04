@@ -1,0 +1,49 @@
+<div class="w-80">
+	<div class="sticky top-4">
+		<div class="bg-primary shadow-lg rounded-lg p-6">
+			<div class="flex items-center mb-4">
+				<img src="{{ asset('img/Cameleon_L_Blanc-BGT.png') }}" alt="Logo Caméléon Solutions Learning" class="w-16 h-16 mr-4">
+				<h2 class="font-semibold text-light">Caméléon Solutions Learning</h2>
+
+			</div>
+			<hr
+			class="border-t-2 border-light my-4">
+			<!-- Ajout de la bordure et de l'espacement -->
+
+			{% if app.user %}
+				{% if inscription %}
+					<div class="mb-6 p-4 border border-blue-200 bg-blue-50 text-blue-800 rounded-lg">
+						✅ Vous êtes inscrit(e) à cette formation.
+						{% if inscription.progression > 0 %}
+							<br>📊 Progression :
+							{{ inscription.progression }}%
+						{% endif %}
+						{% if not inscription.isValidated %}
+							<br>⏳ En attente de validation par l’administrateur.
+						{% endif %}
+					</div>
+				{% else %}
+					<form method="post" action="{{ path('formation_inscription', { slug: formation.slug }) }}" class="mb-6">
+						<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-sm font-medium">
+							S'inscrire à cette formation
+						</button>
+					</form>
+				{% endif %}
+			{% else %}
+				<p class="sticky-ahref text-sm text-light mb-3">
+					<a href="{{ path('app_login') }}" class="text-indigo-600 hover:underline">
+						Connectez-vous
+					</a>
+					pour avoir accès à la formation.
+				</p>
+				<p class="sticky-ahref text-sm text-light  mb-6">
+					<a href="mailto:contact@cameleon-solutions.fr?subject=Demande d'informations sur la formation [Nom de la formation]&body=Bonjour,%0A%0AJe souhaite avoir plus d'informations sur la formation [Nom de la formation en question].%0A%0ACordialement." class="text-indigo-600 hover:underline">
+						Demandez plus d'informations</a>
+					sur la formation.
+				</p>
+			</a>
+
+		</p>
+
+	{% endif %}
+</div>

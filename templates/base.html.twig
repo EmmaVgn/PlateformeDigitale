@@ -8,23 +8,28 @@
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>'"> {% block stylesheets %}{% endblock %}
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>'">
+
+		{% block stylesheets %}
+			<!-- Ajouter Font Awesome CDN -->
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+		{% endblock %}
 
 		{% block javascripts %}
 			{% block importmap %}
 				{{ importmap('app') }}
+
 			{% endblock %}
 		{% endblock %}
 	</head>
+</html></head><body class="bg-light text-primary  font-body">
 
-	<body class="bg-light text-primary  font-body">
+{% include '_partials/_navbar.html.twig' %}
 
-		{% include '_partials/_navbar.html.twig' %}
+<main class="flex-1 container mx-auto px-4 py-8"> {% block body %}{% endblock %}
+	</main>
 
-		<main class="flex-1 container mx-auto px-4 py-8"> {% block body %}{% endblock %}
-			</main>
+	{% include '_partials/_footer.html.twig' %}
 
-			{% include '_partials/_footer.html.twig' %}
-
-		</body>
-	</html>
+</body></html>
