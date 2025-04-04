@@ -52,19 +52,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $formationsSouhaitees = null;
 
-     /**
+   /**
      * @var Collection<int, Formation>
      */
     #[ORM\ManyToMany(targetEntity: Formation::class, inversedBy: 'users')]
     #[ORM\JoinTable(name: 'user_formations')]
     private Collection $formations;
-
+    
     /**
      * @var Collection<int, UserFormation>
      */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserFormation::class)]
     private Collection $userFormations;
-
+    
     public function __construct()
     {
         $this->userFormations = new ArrayCollection();

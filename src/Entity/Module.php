@@ -24,15 +24,11 @@ class Module
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $file = null;
+    #[Vich\UploadableField(mapping: 'module_file', fileNameProperty: 'imageName')]
+    private ?File $fileObj = null;  // Change to handle file uploads for PDF/other files
 
-    /**
-     * @Vich\UploadableField(mapping="module_file", fileNameProperty="file")
-     * @Assert\File(mimeTypes={"application/pdf", "application/vnd.ms-powerpoint", "video/mp4"})
-     * @var File|null
-     */
-    private ?File $fileObj = null;
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -41,6 +37,8 @@ class Module
 
     #[ORM\ManyToOne(inversedBy: 'modules')]
     private ?Formation $formation = null;
+
+    // Getter and setter methods
 
     public function getId(): ?int
     {
@@ -69,32 +67,27 @@ class Module
         return $this;
     }
 
-    public function getFile(): ?string
-    {
-        return $this->file;
-    }
-
-    public function setFile(string $file): static
-    {
-        $this->file = $file;
-        return $this;
-    }
-
     public function getFileObj(): ?File
     {
         return $this->fileObj;
     }
 
-    public function setFileObj(?File $fileObj = null): self
+    public function setFileObj(?File $fileObj = null): void
     {
         $this->fileObj = $fileObj;
-
         if ($fileObj) {
-            // On met à jour la date de modification chaque fois que le fichier est changé
-            $this->updatedAt = new \DateTime();
+            $this->updatedAt = new \DateTimeImmutable();
         }
+    }
 
-        return $this;
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -102,7 +95,7 @@ class Module
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
         return $this;

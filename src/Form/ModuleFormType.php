@@ -29,6 +29,7 @@ class ModuleFormType extends AbstractType
                 'allow_delete' => true,  // Allows deleting the file
                 'download_uri' => true,  // Allows downloading the file
                 'attr' => ['accept' => '.pdf, .ppt, .pptx, .mp4'],  // Restrict file types
+                
             ]);
     }
 

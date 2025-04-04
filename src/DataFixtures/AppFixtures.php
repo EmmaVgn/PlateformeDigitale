@@ -143,12 +143,24 @@ class AppFixtures extends Fixture
             // Création de 2 modules
             for ($i = 1; $i <= 2; $i++) {
                 $module = new Module();
+                
+                // Set the basic module properties
                 $module->setTitle("Module $i - Introduction")
-                    ->setContent("Contenu du module $i pour la formation : " . $data['title'])
-                    ->setFile("module{$i}.pdf")
-                    ->setFormation($formation);
+                       ->setContent("Contenu du module $i pour la formation : " . $data['title'])
+                       ->setFormation($formation);
+                
+                // Manually create a file object if you want to simulate the upload
+                $file = new \Symfony\Component\HttpFoundation\File\File('path/to/your/files/module' . $i . '.pdf');
+                
+                // Set the file object to the module (this triggers the upload mechanism)
+                $module->setFileObj($file);
+                
+                // Optionally, set the file path manually if needed (this might be unnecessary if using the file object)
+                // Removed the call to setFile as the method does not exist in the Module entity
+                
                 $manager->persist($module);
             }
+            
 
             // Création de 2 quiz
             for ($i = 1; $i <= 2; $i++) {

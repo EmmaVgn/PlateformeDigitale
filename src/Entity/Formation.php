@@ -89,8 +89,6 @@ class Formation
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'formations')]
     private Collection $users;
 
-    
-
     /**
      * @var Collection<int, UserFormation>
      */
