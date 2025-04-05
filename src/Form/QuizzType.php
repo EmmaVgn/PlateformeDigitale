@@ -18,16 +18,20 @@ class QuizzType extends AbstractType
         foreach ($quiz->getQuestions() as $question) {
             $choices = [];
             foreach ($question->getResponses() as $response) {
-                $choices[$response->getContent()] = $response->getId();
+                // Assurez-vous que chaque réponse est unique
+                if (!isset($choices[$response->getContent()])) {
+                    $choices[$response->getContent()] = $response->getId();
+                }
             }
-
+        
             $builder->add('question_' . $question->getId(), ChoiceType::class, [
                 'label' => $question->getContent(),
-                'choices' => $choices,
-                'expanded' => true, // Cela permet de rendre les réponses sous forme de boutons radio ou cases à cocher
-                'multiple' => false, // Utilisez `true` pour plusieurs réponses possibles
+                'choices' => $choices, // Réponses uniques
+                'expanded' => true, 
+                'multiple' => false,
             ]);
         }
+        
 
         $builder->add('submit', SubmitType::class, [
             'label' => 'Soumettre'

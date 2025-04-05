@@ -47,6 +47,12 @@ class FormationCrudController extends AbstractCrudController
                 ->setFormTypeOption('multiple', true)
                 ->setFormTypeOption('by_reference', false) // Permet de gérer la relation entre Module et Formation
                 ->setHelp('Sélectionnez les modules associés à cette formation'),
+            AssociationField::new('quizzes') // Cette ligne permet d'ajouter une association avec les quiz
+                ->setFormTypeOptions([
+                    'by_reference' => false, // Permet de lier plusieurs quiz à une formation
+                    'multiple' => true, // Permet d'associer plusieurs quiz
+                    'required' => false, // Optionnel : mettre à true si vous voulez que ce champ soit obligatoire
+                ])
         ];
     }
 }

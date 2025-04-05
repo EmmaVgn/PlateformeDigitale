@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz -
+	{{ quiz.title }}
+{% endblock %}
+
+{% block body %}
+
+	<h1>{{ quiz.title }}</h1>
+	<form method="post">
+		{{ form_start(form) }}
+
+		<div class="questions">
+			{% for question in quiz.questions %}
+				<div class="question">
+					<h3>{{ question.content }}</h3>
+					<div class="answers">
+						{{ form_widget(form['answers_' ~ question.id]) }}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+		<div class="form-group">
+			{{ form_widget(form.submit) }}
+			{# Ajoute le bouton une seule fois ici #}
+		</div>
+
+		{{ form_end(form) }}
+	</form>
+{% endblock %}

@@ -4,8 +4,8 @@ parameters:
 services:
   # Default configuration for services in *this* file
   _defaults:
-    autowire: true # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    autowire: true
+    autoconfigure: true
     bind:
       $projectDir: "%kernel.project_dir%"
 
@@ -15,8 +15,7 @@ services:
     resource: "../src/"
     exclude:
       - "../src/DependencyInjection/"
-      - "../src/Entity/"
-      - "../src/Kernel.php"
+      - "../src/Kernel.php" # On retire ../src/Entity/ de l'exclusion
 
   # Explicit configuration for EmailVerifier service
   App\Security\EmailVerifier:
@@ -26,3 +25,6 @@ services:
   App\Service\FileUploader:
     arguments:
       $targetDirectory: "%modules_directory%"
+
+  App\Twig\AppExtension:
+    tags: ["twig.extension"]

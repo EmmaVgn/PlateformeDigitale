@@ -19,7 +19,7 @@ class Question
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[ORM\ManyToOne(targetEntity: Quiz::class, inversedBy: 'questions')]
     private ?Quiz $quiz = null;
 
     /**
@@ -31,6 +31,14 @@ class Question
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+    }
+
+     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->content ?? 'Question non définie';  // Retourne le titre ou un texte par défaut
     }
 
     public function getId(): ?int

@@ -64,11 +64,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserFormation::class)]
     private Collection $userFormations;
+
+    /**
+     * @var Collection<int, UserAnswer>
+     */
+    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'users')]
+    private Collection $userAnswers;
     
     public function __construct()
     {
         $this->userFormations = new ArrayCollection();
         $this->formations = new ArrayCollection();
+        $this->userAnswers = new ArrayCollection();
     }
 
     /**
@@ -266,6 +273,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFormation(Formation $formation): self
     {
         $this->formations->removeElement($formation);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAnswer>
+     */
+    public function getUserAnswers(): Collection
+    {
+        return $this->userAnswers;
+    }
+
+    public function addUserAnswer(UserAnswer $userAnswer): static
+    {
+        if (!$this->userAnswers->contains($userAnswer)) {
+            $this->userAnswers->add($userAnswer);
+            $userAnswer->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnswer(UserAnswer $userAnswer): static
+    {
+        if ($this->userAnswers->removeElement($userAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($userAnswer->getUsers() === $this) {
+                $userAnswer->setUsers(null);
+            }
+        }
 
         return $this;
     }
