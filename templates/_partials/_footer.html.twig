@@ -4,8 +4,7 @@
 
 		{# Colonne 1 : Logo Caméléon + texte #}
 		<div class="flex items-center gap-4">
-			<img src="{{ asset('img/Cameleon-noir.svg') }}" alt="Caméléon Solutions Learning" class="mb-6" style=" height: 125px;">
-
+			<img src="{{ asset('img/Cameleon-noir.svg') }}" alt="Caméléon Solutions Learning" class="mb-6" style="height: 125px;">
 			<span class="font-title text-lg leading-tight text-primary">
 				Caméléon<br>Solutions Learning
 			</span>
@@ -39,8 +38,9 @@
 					</li>
 				{% endif %}
 				<li>
-					<a href="#" class="hover:underline hover:text-[#085669]">Mentions légales</a>
+					<a href="{{ path('legal_mentions') }}" class="hover:underline hover:text-[#085669]">Mentions légales</a>
 				</li>
+
 			</ul>
 		</div>
 	</div>
@@ -50,8 +50,15 @@
 			Caméléon Solutions Learning est un organisme de formation certifié Qualiopi avec la BGE Incubatest.
 		</p>
 		<img src="{{ asset('img/qualiopiBGE.jpeg') }}" alt="Logo Qualiopi BGE" class="h-16 w-auto mx-auto mb-2">
+
+		<a href="{{ path('legal_cgu') }}" class="hover:underline hover:text-[#085669]">Conditions générales d’utilisation</a>
+		|
+		<a href="{{ path('legal_sitemap') }}" class="hover:underline hover:text-[#085669]">Plan du site</a>
+		<br>
 		&copy;
 		{{ "now"|date("Y") }}
 		Caméléon Solutions Learning – Tous droits réservés.
+
+
 	</div>
 </footer>
