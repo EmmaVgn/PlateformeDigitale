@@ -5,22 +5,21 @@
 
 {% block body %}
 	<section class="w-full bg-animated bg-primary text-light ">
-		<div
-			class="max-w-screen-xl mx-auto px-4 py-16 flex flex-col lg:flex-row items-center">
+		<div class="max-w-screen-xl mx-auto px-4 py-16 flex flex-col lg:flex-row items-center">
 
-			{# IMAGE À GAUCHE #}
+
 			<div class="w-full lg:w-1/2 mb-8 lg:mb-0">
 				<img src="{{ asset('img/Cameleon_L_Blanc-BGT.png') }}" alt="Illustration" class="w-[30%] max-w-md mx-auto lg:mx-0">
 			</div>
 
-			{# TEXTE À DROITE #}
+
 			<div class="w-full lg:w-1/2 text-center lg:text-left">
 				<h1 class="text-3xl md:text-4xl font-title text-light mb-4 leading-tight">
 					Construisez votre avenir avec<br>
 					<strong class="text-hover">Cameleon Solutions Learning</strong>
 				</h1>
 
-				<a href="{{ path('app_formations') }}" class="inline-block mt-6 py-3 px-6 bg-hover  text-white text-sm font-medium rounded transition outline outline-2 outline-white outline-offset-2">
+				<a href="{{ path('app_formations') }}" class="btn-glossy inline-block mt-6 py-3 px-6 bg-hover hover:bg-secondary text-white text-sm font-medium rounded transition outline outline-2 outline-white outline-offset-2">
 					Découvrir les formations
 				</a>
 
@@ -32,25 +31,6 @@
 
 
 	<section class="py-14 px-4">
-		<h2 class="text-2xl font-title text-center text-primary mb-10">Formations populaires</h2>
-
-		<div class="max-w-6xl mx-auto grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-			{% for formation in formations %}
-				<div class="bg-white border border-gray-200 hover:border-hover hover:shadow-md transition-all duration-300 rounded-xl p-6 flex flex-col justify-between font-body">
-					<div>
-						<h3 class="text-lg font-semibold text-primary mb-2">{{ formation.title }}</h3>
-						<p class="text-sm text-primary/80 mb-4">
-							{{ formation.description|slice(0, 100) ~ '...' }}
-						</p>
-					</div>
-					<a href="{{ path('app_formation_show', { slug: formation.slug }) }}" class="inline-block text-sm text-hover hover:underline hover:bg-secondary  font-medium">
-						Voir la formation
-					</a>
-				</div>
-			{% else %}
-
-				<p class="text-center text-primary/80 col-span-full">Aucune formation disponible pour le moment.</p>
-			{% endfor %}
-		</div>
+		{% include "home/_popular_formation.html.twig" %}
 	</section>
 {% endblock %}

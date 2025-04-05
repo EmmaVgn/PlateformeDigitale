@@ -29,12 +29,14 @@ h6 {
   }
 }
 
+/* Animation de fond bandeau homepage */
 .bg-animated {
   background: linear-gradient(135deg, #032b35, #1b4f5f, #064663);
   background-size: 200% 200%;
   animation: backgroundAnimation 10s ease infinite;
 }
 
+/* Page formations */
 .sticky-ahref {
   outline: 2px solid #032b35; /* Contour avec une couleur personnalisée */
   outline-offset: 4px; /* Déplace l'outline de 4px autour de l'élément */
@@ -59,3 +61,31 @@ a.active {
 .text-editor-content li {
   margin-bottom: 0.5rem; /* Ajouter un espacement entre les éléments de liste */
 }
+
+/* Animation boutons */
+.btn-glossy {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glossy::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 400%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.4s ease;
+}
+
+.btn-glossy:hover::before {
+  left: 100%;
+}
+
+/* Animation navbar */
