@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin
+Disallow: /profile
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+
+Sitemap: https://tonsite.fr/sitemap.xml

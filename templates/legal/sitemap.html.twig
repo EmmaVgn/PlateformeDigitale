@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Plan du site - Caméléon Solutions Learning
+{% endblock %}
+
+{% block body %}
+	<div class="max-w-4xl mx-auto px-4 py-10 text-gray-800 font-body">
+		<h1 class="text-3xl font-title font-semibold text-primary mb-8">Plan du site</h1>
+
+		<ul class="list-disc pl-6 space-y-2 text-sm">
+			<li>
+				<a href="{{ path('homepage') }}" class="text-primary hover:underline">Accueil</a>
+			</li>
+			<li>
+				<a href="{{ path('app_formations') }}" class="text-primary hover:underline">Formations</a>
+			</li>
+			<li>
+				<a href="{{ path('app_register') }}" class="text-primary hover:underline">Inscription</a>
+			</li>
+			<li>
+				<a href="{{ path('app_login') }}" class="text-primary hover:underline">Connexion</a>
+			</li>
+
+			{% if app.user %}
+				<li>
+					<a href="{{ path('profile') }}" class="text-primary hover:underline">Tableau de bord</a>
+				</li>
+				{% if is_granted('ROLE_ADMIN') %}
+					<li>
+						<a href="{{ path('admin') }}" class="text-primary hover:underline">Espace administrateur</a>
+					</li>
+				{% endif %}
+				<li>
+					<a href="{{ path('app_logout') }}" class="text-primary hover:underline">Déconnexion</a>
+				</li>
+			{% endif %}
+
+			<li>
+				<a href="{{ path('legal_mentions') }}" class="text-primary hover:underline">Mentions légales</a>
+			</li>
+			<li>
+				<a href="{{ path('legal_cgu') }}" class="text-primary hover:underline">Conditions Générales d’Utilisation</a>
+			</li>
+		</ul>
+	</div>
+{% endblock %}
