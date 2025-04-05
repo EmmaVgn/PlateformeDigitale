@@ -35,6 +35,13 @@ final class SitemapController extends AbstractController{
     <url>
         <loc>{{ url('legal_sitemap') }}</loc>
     </url>
+    <url>
+    <loc>https://www.cameleon-solutions.fr</loc>
+</url>
+<url>
+    <loc>https://learning.cameleon-solutions.fr</loc>
+</url>
+
 </urlset>
 XML;
 

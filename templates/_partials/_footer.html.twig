@@ -27,10 +27,12 @@
 			<h4 class="font-semibold mb-2">Liens utiles</h4>
 			<ul class="space-y-1">
 				<li>
-					<a href="{{ path('homepage') }}" class="hover:underline hover:text-[#085669]">Accueil</a>
+					<a href="{{ path('app_formations') }}" class="hover:underline hover:text-[#085669]">Formations</a>
 				</li>
 				<li>
-					<a href="{{ path('app_formations') }}" class="hover:underline hover:text-[#085669]">Formations</a>
+					<a href="https://www.cameleon-solutions.fr" target="_blank" class="hover:underline hover:text-[#085669]">
+						Caméléon Solution (services numériques)
+					</a>
 				</li>
 				{% if is_granted('ROLE_ADMIN') %}
 					<li>
