@@ -38,7 +38,13 @@ class Module
     #[ORM\ManyToOne(inversedBy: 'modules')]
     private ?Formation $formation = null;
 
-    // Getter and setter methods
+   /**
+    * @return string
+    */
+   public function __toString(): string
+   {
+       return $this->title ?? 'Module non définie';  // Retourne le titre ou un texte par défaut
+   }
 
     public function getId(): ?int
     {

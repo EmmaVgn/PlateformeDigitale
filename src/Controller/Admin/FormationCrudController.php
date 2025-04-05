@@ -43,6 +43,10 @@ class FormationCrudController extends AbstractCrudController
                 ->setFormTypeOption('multiple', true)
                 ->setFormTypeOption('by_reference', false) // Permet de gérer la relation entre User et Formation
                 ->setHelp('Sélectionnez les utilisateurs qui participent à cette formation'),
+            AssociationField::new('modules') // Permet de gérer la relation inverse
+                ->setFormTypeOption('multiple', true)
+                ->setFormTypeOption('by_reference', false) // Permet de gérer la relation entre Module et Formation
+                ->setHelp('Sélectionnez les modules associés à cette formation'),
         ];
     }
 }

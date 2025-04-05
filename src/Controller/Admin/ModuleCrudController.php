@@ -3,12 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Module;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class ModuleCrudController extends AbstractCrudController
 {
@@ -22,6 +23,8 @@ class ModuleCrudController extends AbstractCrudController
         return [
             TextField::new('title'),
             TextEditorField::new('content'),
+            AssociationField::new('formation')
+            ->setLabel('Formation liée'),
             
             // Ajout d'un panneau pour le téléversement du fichier
             FormField::addPanel('Téléversement de fichier')->setIcon('fa fa-file-upload'),
