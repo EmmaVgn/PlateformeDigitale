@@ -7,6 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
@@ -25,7 +27,13 @@ class Module
     private ?string $content = null;
 
     #[Vich\UploadableField(mapping: 'module_file', fileNameProperty: 'imageName')]
-    private ?File $fileObj = null;  // Change to handle file uploads for PDF/other files
+    #[Assert\File(
+        maxSize: '100M',
+        mimeTypes: ['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'video/mp4'],
+        mimeTypesMessage: 'Veuillez uploader un fichier PDF, PPT, ou MP4 valide.',
+        maxSizeMessage: 'Le fichier est trop lourd. Maximum 100 Mo autorisé.'
+    )]
+    private ?File $fileObj = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $imageName = null;
@@ -37,6 +45,14 @@ class Module
 
     #[ORM\ManyToOne(inversedBy: 'modules')]
     private ?Formation $formation = null;
+
+    #[ORM\OneToMany(mappedBy: 'modules', targetEntity: Pdf::class, cascade: ['persist'], orphanRemoval: true)]
+    private Collection $pdfs;
+
+    public function __construct()
+    {
+        $this->pdfs = new ArrayCollection();
+    }
 
    /**
     * @return string
@@ -117,4 +133,30 @@ class Module
         $this->formation = $formation;
         return $this;
     }
-}
+
+    public function getPdfs(): Collection
+    {
+        return $this->pdfs;
+    }
+
+    public function addPdf(Pdf $pdf): static
+    {
+        if (!$this->pdfs->contains($pdf)) {
+            $this->pdfs[] = $pdf;
+            $pdf->setModules($this);
+        }
+
+        return $this;
+    }
+
+    public function removePdf(Pdf $pdf): static
+    {
+        if ($this->pdfs->removeElement($pdf)) {
+            if ($pdf->getModules() === $this) {
+                $pdf->setModules(null);
+            }
+        }
+
+        return $this;
+    }
+    }

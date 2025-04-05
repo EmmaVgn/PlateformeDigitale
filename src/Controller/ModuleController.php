@@ -20,38 +20,18 @@ class ModuleController extends AbstractController
     {
         $module = new Module();
         $form = $this->createForm(ModuleFormType::class, $module);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Handling the file upload
-            /** @var UploadedFile $file */
-            $file = $form->get('file')->getData();
-
-            if ($file) {
-                // Generate a unique name for the file before saving it
-                $fileName = uniqid().'.'.$file->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $file->move(
-                        $this->getParameter('modules_directory'), // Directory for saving files
-                        $fileName
-                    );
-                } catch (FileException $e) {
-                    // Handle exception if something goes wrong during file upload
-                    $this->addFlash('error', 'There was an error uploading the file.');
-                    return $this->redirectToRoute('app_module_new');
-                }
-
-                // Update the 'file' property to store the file name in the database
-                $module->setFile($fileName);
+            // 🔁 Important : rattacher chaque PDF à son module
+            foreach ($module->getPdfs() as $pdf) {
+                $pdf->setModules($module); // relation inverse
             }
 
-            // Persist the module object
+            // VichUploaderBundle gère tout le reste : upload du fileObj, du imageFile, etc.
             $moduleRepository->save($module, true);
 
-            // Redirect to a new route or display success message
+            $this->addFlash('success', 'Module créé avec succès !');
             return $this->redirectToRoute('app_module_index');
         }
 
@@ -59,4 +39,5 @@ class ModuleController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }
