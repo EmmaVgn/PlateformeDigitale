@@ -28,9 +28,13 @@ class Question
     #[ORM\OneToMany(targetEntity: Answer::class, mappedBy: 'question')]
     private Collection $answers;
 
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: UserAnswer::class, cascade: ['remove'])]
+    private Collection $userAnswers;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->userAnswers = new ArrayCollection();
     }
 
      /**
@@ -94,6 +98,33 @@ class Question
             // set the owning side to null (unless already changed)
             if ($answer->getQuestion() === $this) {
                 $answer->setQuestion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUserAnswers(): Collection
+    {
+        return $this->userAnswers;
+    }
+
+    public function addUserAnswer(UserAnswer $userAnswer): self
+    {
+        if (!$this->userAnswers->contains($userAnswer)) {
+            $this->userAnswers[] = $userAnswer;
+            $userAnswer->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnswer(UserAnswer $userAnswer): self
+    {
+        if ($this->userAnswers->removeElement($userAnswer)) {
+            // set the owning side to null (unless already changed)
+            if ($userAnswer->getQuestion() === $this) {
+                $userAnswer->setQuestion(null);
             }
         }
 

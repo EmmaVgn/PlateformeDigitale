@@ -24,7 +24,7 @@ class QuizzController extends AbstractController
     }
 
     #[Route('/quiz/{slug}', name: 'quiz_show')]
-    public function show(string $slug, Request $request): Response
+    public function show(string $slug, Request $request, UserAnswerRepository $userAnswerRepository): Response
     {
         // Récupérer le quiz à partir du slug
         $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['slug' => $slug]);
@@ -60,6 +60,11 @@ class QuizzController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+            $userAnswersExistantes = $userAnswerRepository->findByUserAndQuiz($this->getUser(), $quiz);
+            foreach ($userAnswersExistantes as $oldAnswer) {
+                $this->entityManager->remove($oldAnswer);
+            }
+
             foreach ($quiz->getQuestions() as $question) {
                 $userAnswer = new UserAnswer();
                 $userAnswer->setUser($this->getUser());
@@ -79,6 +84,7 @@ class QuizzController extends AbstractController
                     throw new \Exception("La réponse avec l'ID $answerId est introuvable dans la base de données.");
                 }
                 
+                $userAnswer->setQuestion($question);
                 $userAnswer->setAnswer($answer);
                 $this->entityManager->persist($userAnswer);
             }
@@ -105,19 +111,22 @@ class QuizzController extends AbstractController
         }
     
         // Récupérer les réponses de l'utilisateur pour ce quiz
-        $userAnswers = $userAnswerRepository->findByUserAndQuiz($this->getUser(), $quiz);  
+        $userAnswers = $userAnswerRepository->findByUserAndQuiz($this->getUser(), $quiz);
+
+        $questions = $quiz->getQuestions();
+        $totalQuestions = count($questions);
         $score = 0;
-    
-        // Calculer le score
+        
         foreach ($userAnswers as $userAnswer) {
             if ($userAnswer->getAnswer()->isCorrect()) {
                 $score++;
             }
         }
-    
+        
         return $this->render('quizz/results.html.twig', [
             'quiz' => $quiz,
             'score' => $score,
+            'total' => $totalQuestions
         ]);
     }
     
