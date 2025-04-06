@@ -49,6 +49,9 @@ class Module
     #[ORM\OneToMany(mappedBy: 'modules', targetEntity: Pdf::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $pdfs;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $estimatedDuration = null;
+
     public function __construct()
     {
         $this->pdfs = new ArrayCollection();
@@ -159,4 +162,29 @@ class Module
 
         return $this;
     }
+
+    public function getEstimatedDuration(): ?int
+    {
+        return $this->estimatedDuration;
     }
+
+    public function setEstimatedDuration(?int $estimatedDuration): self
+    {
+        $this->estimatedDuration = $estimatedDuration;
+        return $this;
+    }
+
+    public function updateEstimatedDurationFromFiles(): void
+    {
+        $total = 0;
+
+        foreach ($this->getPdfs() as $pdf) {
+            if ($pdf->getEstimatedDuration()) {
+                $total += $pdf->getEstimatedDuration();
+            }
+        }
+
+        $this->setEstimatedDuration($total);
+    }
+
+}

@@ -35,7 +35,13 @@ class Pdf
     #[ORM\JoinColumn(nullable: false)]
     private ?Module $modules = null;
 
-    // Getter and setter methods
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $estimatedDuration = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title = null;
+
+
 
     public function getId(): ?int
     {
@@ -60,10 +66,11 @@ class Pdf
         return $this->imageName;
     }
 
-    public function setImageName(string $imageName): void
+    public function setImageName(?string $imageName): void
     {
-        $this->imageName = $imageName;
+        $this->imageName = $imageName ?? '';
     }
+    
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
@@ -84,6 +91,28 @@ class Pdf
     public function setModules(?Module $modules): static
     {
         $this->modules = $modules;
+        return $this;
+    }
+
+    public function getEstimatedDuration(): ?int
+    {
+        return $this->estimatedDuration;
+    }
+
+    public function setEstimatedDuration(?int $estimatedDuration): self
+    {
+        $this->estimatedDuration = $estimatedDuration;
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
         return $this;
     }
 }

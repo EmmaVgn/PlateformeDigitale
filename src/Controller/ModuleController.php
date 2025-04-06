@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Module;
+use App\Entity\ModuleView;
 use App\Form\ModuleFormType;
 use App\Repository\ModuleRepository;
 use App\Repository\ModuleViewRepository;
@@ -69,6 +70,36 @@ class ModuleController extends AbstractController
             'module' => $module,
         ]);
     }
+
+    #[Route('/module/view/{id}', name: 'module_view')]
+public function view(Module $module, Request $request, EntityManagerInterface $em): Response
+{
+    $user = $this->getUser();
+
+    // Vérifie s'il y a déjà un ModuleView
+    $existingView = $em->getRepository(ModuleView::class)->findOneBy([
+        'user' => $user,
+        'module' => $module,
+    ]);
+
+    if (!$existingView) {
+        $view = new ModuleView();
+        $view->setUser($user);
+        $view->setModule($module);
+        $view->setViewedAt(new \DateTimeImmutable());
+
+        $em->persist($view);
+        $em->flush();
+    }
+
+    // Met à jour la progression (tu l’as probablement déjà fait ici)
+
+    // Redirige vers le fichier PDF
+    $file = $request->query->get('file');
+
+    return $this->redirect('/uploads/pdfs/' . $file);
+}
+
 
 
 }

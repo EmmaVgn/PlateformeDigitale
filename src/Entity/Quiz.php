@@ -37,6 +37,9 @@ class Quiz
     #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'quiz')]
     private Collection $userAnswers;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $estimatedDuration = null;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -151,4 +154,21 @@ class Quiz
 
         return $this;
     }
+
+    public function getEstimatedDuration(): ?int
+    {
+        return $this->estimatedDuration;
+    }
+
+    public function setEstimatedDuration(?int $estimatedDuration): self
+    {
+        $this->estimatedDuration = $estimatedDuration;
+        return $this;
+    }
+    public function updateEstimatedDuration(): void
+    {
+        // Par exemple : 1,5 minute par question
+        $this->estimatedDuration = ceil(count($this->questions) * 1.5);
+    }
+
 }

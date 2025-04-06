@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Vich\UploaderBundle\Form\Type\VichFileType; // Import VichFileType
 
 class ModuleFormType extends AbstractType
@@ -37,6 +38,11 @@ class ModuleFormType extends AbstractType
                 'allow_add' => true,
                 'by_reference' => false,
                 'label' => false,
+            ])
+            ->add('estimatedDuration', IntegerType::class, [
+                'label' => 'Durée estimée (en minutes)',
+                'required' => false,
+                'attr' => ['min' => 1],
             ]);
     }
 

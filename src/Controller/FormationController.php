@@ -70,12 +70,28 @@ class FormationController extends AbstractController
         
         $progress = $progression ? $progression->getProgress() : 0;
 
+        $modules = $formation->getModules();
+
+        $totalMinutes = 0;
+
+        foreach ($modules as $module) {
+            foreach ($module->getPdfs() as $pdf) {
+                $totalMinutes += $pdf->getEstimatedDuration() ?? 0;
+            }
+        }
+
+        foreach ($formation->getQuizzes() as $quiz) {
+            $totalMinutes += $quiz->getEstimatedDuration() ?? 0;
+        }   
+
 
         return $this->render('formation/show.html.twig', [
             'formation' => $formation,
             'inscription' => $inscription,
             'inscriptionValide' => $inscriptionValide,
             'progress' => $progress,
+            'modules' => $modules,
+            'totalDuration' => $totalMinutes,
         ]);
     }
 

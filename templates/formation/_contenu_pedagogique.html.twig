@@ -1,21 +1,41 @@
 {% if inscription and inscription.isValidated %}
 	<div id="modules" class="mb-12">
 		<h2 class="text-2xl font-semibold mb-4">Modules</h2>
-		{% if formation.modules|length > 0 %}
+
+		{% if modules|length > 0 %}
 			<ul class="space-y-4 mb-10">
-				{% for module in formation.modules %}
+				{% for module in modules %}
 					<li class="border border-gray-200 p-4 rounded-lg bg-white">
 						<h3 class="text-lg font-semibold text-gray-700 mb-1">{{ module.title }}</h3>
-						<p class="text-sm text-gray-500 mb-2">{{ module.content|raw }}</p>
-						{% if module.imageName %}
-							<a href="{{ asset('uploads/modules/' ~ module.imageName) }}" target="_blank" class="text-sm text-indigo-600 hover:underline font-medium">
-								Télécharger
-								{{ module.imageName }}
-							</a>
-						{% else %}
-							<p class="text-sm text-indigo-600 hover:underline font-medium">Aucun fichier disponible.</p>
+
+						{% if module.estimatedDuration %}
+							<p class="text-sm text-gray-500 mb-1">⏱ Durée estimée :
+								{{ module.estimatedDuration }}
+								min</p>
 						{% endif %}
 
+
+						<p class="text-sm text-gray-500 mb-2">{{ module.content|raw }}</p>
+
+						{% if module.pdfs|length > 0 %}
+							<ul class="text-sm space-y-1 mt-2">
+								{% for pdf in module.pdfs %}
+									<li>
+										📄
+										<a href="{{ path('module_view', { id: module.id }) }}?file={{ pdf.imageName }}" target="_blank" class="text-indigo-600 hover:underline">
+											{{ pdf.title ?: pdf.imageName }}
+										</a>
+										{% if pdf.estimatedDuration %}
+											– ⏱
+											{{ pdf.estimatedDuration }}
+											min
+										{% endif %}
+									</li>
+								{% endfor %}
+							</ul>
+						{% else %}
+							<p class="text-sm text-gray-500">Aucun fichier disponible pour ce module.</p>
+						{% endif %}
 					</li>
 				{% endfor %}
 			</ul>
@@ -30,8 +50,17 @@
 			<ul class="space-y-4">
 				{% for quiz in formation.quizzes %}
 					<li class="flex items-center justify-between bg-white border border-gray-200 p-4 rounded-lg">
-						<span class="text-gray-700 font-medium">{{ quiz.title }}</span>
-						<a href="{{ path('quiz_show', {'slug': quiz.slug}) }}" class="text-sm text-indigo-600 hover:underline font-medium">Lancer le quiz</a>
+						<div>
+							<span class="text-gray-700 font-medium block">{{ quiz.title }}</span>
+							{% if quiz.estimatedDuration %}
+								<span class="text-sm text-gray-500">⏱
+									{{ quiz.estimatedDuration }}
+									min</span>
+							{% endif %}
+						</div>
+						<a href="{{ path('quiz_show', {'slug': quiz.slug}) }}" class="text-sm text-indigo-600 hover:underline font-medium">
+							Lancer le quiz
+						</a>
 					</li>
 				{% endfor %}
 			</ul>

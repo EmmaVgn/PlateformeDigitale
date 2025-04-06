@@ -14,7 +14,7 @@
 						✅ Formation en cours
 
 						{% if progressions[inscription.formation.id] is defined and progressions[inscription.formation.id] > 0 %}
-							<div class="mt-3">
+							<div class="mt-5">
 								📊 Progression :
 								{{ progressions[inscription.formation.id] }}%
 								<div class="w-full bg-blue-100 rounded-full h-2.5 mt-1">
@@ -22,6 +22,16 @@
 								</div>
 							</div>
 						{% endif %}
+
+						{% if totalDuration > 0 %}
+							<p class="mt-5 text-sm text-blue-800">
+								🕒 Temps estimé :
+								{% set hours = (totalDuration // 60) %}
+								{% set minutes = (totalDuration % 60) %}
+								{{ hours > 0 ? hours ~ 'h ' : '' }}{{ minutes }}min
+							</p>
+						{% endif %}
+
 
 						{% if not inscription.isValidated %}
 							<br>⏳ En attente de validation par l’administrateur.

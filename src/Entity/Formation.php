@@ -120,6 +120,19 @@ class Formation
         $this->progressions = new ArrayCollection();
     }
 
+    public function updateTotalDuration(): void
+    {
+        $total = 0;
+
+        foreach ($this->modules as $module) {
+            foreach ($module->getPdfs() as $pdf) {
+                $total += $pdf->getEstimatedDuration() ?? 0;
+            }
+        }
+
+        $this->duree = (string) $total . ' min'; // ou juste (string) $total;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
