@@ -98,6 +98,9 @@ class Formation
     #[ORM\Column(type: Types::TEXT)]
     private ?string $competences = null;
 
+    #[ORM\OneToMany(mappedBy: 'formation', targetEntity: Progression::class, orphanRemoval: true)]
+    private Collection $progressions;
+
 
     /**
      * @return string
@@ -114,6 +117,7 @@ class Formation
         $this->inscriptions = new ArrayCollection();
         $this->userFormations = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->progressions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -488,6 +492,32 @@ class Formation
     public function setCompetences(string $competences): static
     {
         $this->competences = $competences;
+
+        return $this;
+    }
+
+    public function getProgressions(): Collection
+    {
+        return $this->progressions;
+    }
+
+    public function addProgression(Progression $progression): self
+    {
+        if (!$this->progressions->contains($progression)) {
+            $this->progressions[] = $progression;
+            $progression->setFormation($this); // ou setUser selon l'entité
+        }
+
+        return $this;
+    }
+    public function removeProgression(Progression $progression): self
+    {
+        if ($this->progressions->removeElement($progression)) {
+            // set the owning side to null (unless already changed)
+            if ($progression->getFormation() === $this) {
+                $progression->setFormation(null);
+            }
+        }
 
         return $this;
     }

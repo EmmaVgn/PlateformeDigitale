@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon tableau de bord{% endblock %}
+{% block title %}Mon tableau de bord
+{% endblock %}
 
 {% block body %}
 	<div class="max-w-6xl mx-auto px-4 py-8">
 		<h1 class="text-2xl font-bold text-gray-800 mb-6">
-			Bienvenue {{ app.user.firstname }} 👋
+			Bienvenue
+			{{ app.user.firstname }}
+			👋
 		</h1>
 
 		<section class="mt-8">
@@ -16,9 +19,16 @@
 					{% for inscription in inscriptions %}
 						<div class="border border-gray-200 rounded-xl p-4 shadow-sm bg-white">
 							<h3 class="text-lg font-semibold text-gray-800 mb-2">{{ inscription.formation.title }}</h3>
-							<p class="text-sm text-gray-600 mb-4">Progression : {{ inscription.progression }}%</p>
-							<a href="{{ path('app_formation_show', { slug: inscription.formation.slug }) }}"
-								class="inline-block text-sm text-indigo-600 hover:underline font-medium">
+							<p class="text-sm text-gray-600 mb-4">
+								Progression :
+								{% if progressions[inscription.formation.id] is defined %}
+									{{ progressions[inscription.formation.id] }}%
+								{% else %}
+									0%
+								{% endif %}
+							</p>
+
+							<a href="{{ path('app_formation_show', { slug: inscription.formation.slug }) }}" class="inline-block text-sm text-indigo-600 hover:underline font-medium">
 								Reprendre la formation
 							</a>
 						</div>

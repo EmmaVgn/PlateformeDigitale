@@ -32,7 +32,6 @@ class UserFormationCrudController extends AbstractCrudController
                 ->setFormTypeOption('by_reference', false)
                 ->setFormTypeOption('multiple', true), // Permet de sélectionner plusieurs formations à l'utilisateur
 
-            IntegerField::new('progression')->setLabel('Progression (%)'),
             BooleanField::new('isCompleted')->setLabel('Terminée ?'),
             DateTimeField::new('dateInscription')->setLabel('Date d’inscription')->hideOnForm(),
             BooleanField::new('isValidated')->setLabel('Validée par admin'),

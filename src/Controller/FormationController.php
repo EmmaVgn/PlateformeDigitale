@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\UserFormation;
 use App\Repository\FormationRepository;
+use App\Repository\ProgressionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class FormationController extends AbstractController
     
 
     #[Route('/formation/{slug}', name: 'app_formation_show')]
-    public function show(string $slug, FormationRepository $formationRepository): Response
+    public function show(string $slug, FormationRepository $formationRepository, ProgressionRepository $progressionRepository): Response
     {
         $formation = $formationRepository->findOneBy(['slug' => $slug]);
 
@@ -62,11 +63,19 @@ class FormationController extends AbstractController
             }
         }
 
+        $progression = $progressionRepository->findOneBy([
+            'user' => $this->getUser(),
+            'formation' => $formation
+        ]);
+        
+        $progress = $progression ? $progression->getProgress() : 0;
+
 
         return $this->render('formation/show.html.twig', [
             'formation' => $formation,
             'inscription' => $inscription,
             'inscriptionValide' => $inscriptionValide,
+            'progress' => $progress,
         ]);
     }
 
@@ -97,7 +106,7 @@ class FormationController extends AbstractController
         $inscription = new UserFormation();
         $inscription->setUser($user);
         $inscription->setFormation($formation);
-        $inscription->setProgression(0);
+
         $inscription->setIsCompleted(false);
     
         $em->persist($inscription);

@@ -21,9 +21,6 @@ class UserFormation
     private ?Formation $formation = null;
 
     #[ORM\Column]
-    private ?int $progression = 0;
-
-    #[ORM\Column]
     private ?bool $isCompleted = false;
 
     #[ORM\Column]
@@ -71,18 +68,6 @@ class UserFormation
     public function setFormation(?Formation $formation): static
     {
         $this->formation = $formation;
-
-        return $this;
-    }
-
-    public function getProgression(): ?int
-    {
-        return $this->progression;
-    }
-
-    public function setProgression(int $progression): static
-    {
-        $this->progression = $progression;
 
         return $this;
     }

@@ -2,22 +2,27 @@
 	<div class="sticky top-4">
 		<div class="bg-primary shadow-lg rounded-lg p-6">
 			<div class="flex items-center mb-4">
-				<img src="{{ asset('img/Cameleon_L_Blanc-BGT.png') }}" alt="Logo Caméléon Solutions Learning" class=" class=" mb-6" style=" height: 125px;">
-				<h2 class="font-semibold text-light">Caméléon Solutions Learning</h2>
-
+				<img src="{{ asset('img/Cameleon_L_Blanc-BGT.png') }}" alt="Logo Caméléon Solutions Learning" class="mb-6" style="height: 125px;">
+				<h2 class="font-semibold text-light ml-4">Caméléon Solutions Learning</h2>
 			</div>
-			<hr
-			class="border-t-2 border-light my-4">
-			<!-- Ajout de la bordure et de l'espacement -->
+
+			<hr class="border-t-2 border-light my-4">
 
 			{% if app.user %}
 				{% if inscription %}
 					<div class="mb-6 p-4 border border-blue-200 bg-blue-50 text-blue-800 rounded-lg">
-						✅ Vous êtes inscrit(e) à cette formation.
-						{% if inscription.progression > 0 %}
-							<br>📊 Progression :
-							{{ inscription.progression }}%
+						✅ Formation en cours
+
+						{% if progressions[inscription.formation.id] is defined and progressions[inscription.formation.id] > 0 %}
+							<div class="mt-3">
+								📊 Progression :
+								{{ progressions[inscription.formation.id] }}%
+								<div class="w-full bg-blue-100 rounded-full h-2.5 mt-1">
+									<div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: {{ progressions[inscription.formation.id] }}%"></div>
+								</div>
+							</div>
 						{% endif %}
+
 						{% if not inscription.isValidated %}
 							<br>⏳ En attente de validation par l’administrateur.
 						{% endif %}
@@ -30,20 +35,19 @@
 					</form>
 				{% endif %}
 			{% else %}
-				<p class="sticky-ahref text-sm text-light mb-3">
+				<p class="text-sm text-light mb-3">
 					<a href="{{ path('app_login') }}" class="text-indigo-600 hover:underline">
 						Connectez-vous
 					</a>
 					pour avoir accès à la formation.
 				</p>
-				<p class="sticky-ahref text-sm text-light  mb-6">
+				<p class="text-sm text-light mb-6">
 					<a href="mailto:contact@cameleon-solutions.fr?subject=Demande d'informations sur la formation [Nom de la formation]&body=Bonjour,%0A%0AJe souhaite avoir plus d'informations sur la formation [Nom de la formation en question].%0A%0ACordialement." class="text-indigo-600 hover:underline">
-						Demandez plus d'informations</a>
+						Demandez plus d'informations
+					</a>
 					sur la formation.
 				</p>
-			</a>
-
-		</p>
-
-	{% endif %}
+			{% endif %}
+		</div>
+	</div>
 </div>

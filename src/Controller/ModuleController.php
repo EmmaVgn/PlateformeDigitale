@@ -6,6 +6,8 @@ namespace App\Controller;
 use App\Entity\Module;
 use App\Form\ModuleFormType;
 use App\Repository\ModuleRepository;
+use App\Repository\ModuleViewRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,5 +41,34 @@ class ModuleController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/module/{id}', name: 'app_module_show')]
+    public function show(
+        Module $module,
+        ModuleViewRepository $moduleViewRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+
+        // Vérifie si ce module a déjà été vu par cet utilisateur
+        $existingView = $moduleViewRepository->findOneBy([
+            'user' => $user,
+            'module' => $module,
+        ]);
+
+        // Si non, on enregistre la vue
+        if (!$existingView) {
+            $view = new \App\Entity\ModuleView();
+            $view->setUser($user);
+            $view->setModule($module);
+            $entityManager->persist($view);
+            $entityManager->flush();
+        }
+
+        return $this->render('module/show.html.twig', [
+            'module' => $module,
+        ]);
+    }
+
 
 }

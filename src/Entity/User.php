@@ -68,14 +68,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserAnswer>
      */
-    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'users')]
+    #[ORM\OneToMany(targetEntity: UserAnswer::class, mappedBy: 'user')]
     private Collection $userAnswers;
-    
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Progression::class, orphanRemoval: true)]
+    private Collection $progressions;
+        
     public function __construct()
     {
         $this->userFormations = new ArrayCollection();
         $this->formations = new ArrayCollection();
         $this->userAnswers = new ArrayCollection();
+        $this->progressions = new ArrayCollection();
     }
 
     /**
@@ -289,7 +293,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->userAnswers->contains($userAnswer)) {
             $this->userAnswers->add($userAnswer);
-            $userAnswer->setUsers($this);
+            $userAnswer->setUser($this);
         }
 
         return $this;
@@ -299,11 +303,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->userAnswers->removeElement($userAnswer)) {
             // set the owning side to null (unless already changed)
-            if ($userAnswer->getUsers() === $this) {
-                $userAnswer->setUsers(null);
+            if ($userAnswer->getUser() === $this) {
+                $userAnswer->setUser(null);
             }
         }
 
         return $this;
+    }
+
+    public function getProgressions(): Collection
+    {
+        return $this->progressions;
     }
 }

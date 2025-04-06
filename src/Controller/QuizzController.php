@@ -5,8 +5,13 @@ namespace App\Controller;
 use App\Entity\Quiz;
 use App\Entity\Answer;
 use App\Entity\UserAnswer;
+use App\Entity\Progression;
+use App\Entity\QuizCompletion;
+use Doctrine\ORM\EntityManager;
+use App\Repository\ModuleViewRepository;
 use App\Repository\UserAnswerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\QuizCompletionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -101,33 +106,84 @@ class QuizzController extends AbstractController
     }
 
     #[Route('/quiz/{slug}/results', name: 'quiz_results')]
-    public function results(string $slug, UserAnswerRepository $userAnswerRepository): Response
-    {
-        // Récupérer le Quiz à partir du slug
+    public function results(
+        string $slug,
+        UserAnswerRepository $userAnswerRepository,
+        QuizCompletionRepository $quizCompletionRepository,
+        ModuleViewRepository $moduleViewRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Récupérer le quiz
         $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['slug' => $slug]);
-    
         if (!$quiz) {
             throw $this->createNotFoundException("Le quiz avec le slug '$slug' est introuvable.");
         }
     
-        // Récupérer les réponses de l'utilisateur pour ce quiz
-        $userAnswers = $userAnswerRepository->findByUserAndQuiz($this->getUser(), $quiz);
-
+        $user = $this->getUser();
+        $formation = $quiz->getFormation();
         $questions = $quiz->getQuestions();
         $totalQuestions = count($questions);
         $score = 0;
-        
+    
+        // Calcul du score
+        $userAnswers = $userAnswerRepository->findByUserAndQuiz($user, $quiz);
         foreach ($userAnswers as $userAnswer) {
             if ($userAnswer->getAnswer()->isCorrect()) {
                 $score++;
             }
         }
-        
+    
+        // Enregistrer la complétion du quiz si non déjà faite
+        $existingCompletion = $quizCompletionRepository->findOneBy([
+            'user' => $user,
+            'quiz' => $quiz,
+        ]);
+    
+        if (!$existingCompletion) {
+            $completion = new QuizCompletion();
+            $completion->setUser($user);
+            $completion->setQuiz($quiz);
+            $entityManager->persist($completion);
+        }
+    
+        // Récupération ou création de l'objet Progression
+        $progression = $this->entityManager->getRepository(Progression::class)
+            ->findOneBy(['user' => $user, 'formation' => $formation]);
+    
+        if (!$progression) {
+            $progression = new Progression();
+            $progression->setUser($user);
+            $progression->setFormation($formation);
+        }
+    
+        // Progression = (quizz terminés + modules vus) / total étapes
+        $totalSteps = count($formation->getModules()) + count($formation->getQuizzes());
+    
+        $completedQuizzes = $quizCompletionRepository->findBy(['user' => $user]);
+        $completedQuizzesInFormation = array_filter($completedQuizzes, function ($qc) use ($formation) {
+            return $qc->getQuiz()->getFormation() === $formation;
+        });
+    
+        $completedModules = $moduleViewRepository->findBy(['user' => $user]);
+        $completedModulesInFormation = array_filter($completedModules, function ($mv) use ($formation) {
+            return $mv->getModule()->getFormation() === $formation;
+        });
+    
+        $completedCount = count($completedQuizzesInFormation) + count($completedModulesInFormation);
+        $progressionPercent = $totalSteps > 0 ? ($completedCount / $totalSteps) * 100 : 0;
+    
+        $progression->setProgress(round($progressionPercent, 2));
+    
+        // Flush tout
+        $this->entityManager->persist($progression);
+        $this->entityManager->flush();
+    
         return $this->render('quizz/results.html.twig', [
             'quiz' => $quiz,
             'score' => $score,
-            'total' => $totalQuestions
+            'total' => $totalQuestions,
         ]);
     }
+    
     
 }
