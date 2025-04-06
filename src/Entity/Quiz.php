@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+/**
+ * @ORM\HasLifecycleCallbacks
+ */
 #[ORM\Entity(repositoryClass: QuizRepository::class)]
 class Quiz
 {
@@ -28,7 +31,7 @@ class Quiz
     /**
      * @var Collection<int, Question>
      */
-    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'quiz')]
+    #[ORM\OneToMany(targetEntity: Question::class, mappedBy: 'quiz', cascade: ['persist', 'remove'])]
     private Collection $questions;
 
     /**
@@ -54,6 +57,15 @@ class Quiz
         return $this->title ?? 'Quiz non définie';  // Retourne le titre ou un texte par défaut
     }
 
+        /**
+     * @ORM\PrePersist
+     */
+    public function setSlugAutomatically()
+    {
+        if (!$this->slug) {
+            $this->slug = strtolower(str_replace(' ', '-', $this->title));
+        }
+    }
 
     public function getId(): ?int
     {

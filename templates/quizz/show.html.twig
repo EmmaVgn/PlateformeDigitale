@@ -1,31 +1,54 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Quiz -
 	{{ quiz.title }}
 {% endblock %}
-
 {% block body %}
-
-	<h1>{{ quiz.title }}</h1>
-	<form method="post">
-		{{ form_start(form) }}
-
-		<div class="questions">
+	<div class="container mx-auto p-6">
+		<h1 class="text-center text-3xl font-bold text-blue-600 mb-6">{{ quiz.title }}</h1>
+		<form method="post" class="bg-gray-100 p-6 rounded-lg shadow-lg">
+			{{ form_start(form) }}
 			{% for question in quiz.questions %}
-				<div class="question">
-					<h3>{{ question.content }}</h3>
-					<div class="answers">
-						{{ form_widget(form['answers_' ~ question.id]) }}
+				<div class="question space-y-4" id="question-{{ loop.index }}" style="display: {% if loop.index == 1 %}block{% else %}none{% endif %}">
+					<h3 class="text-lg font-semibold text-gray-800">{{ question.content }}</h3>
+					<div class="answers flex flex-col space-y-4">
+						{{ form_widget(form['answers_' ~ question.id], { 'attr': { 'class': 'block bg-white border border-gray-300 rounded-lg p-4 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500' } }) }}
 					</div>
+					{% if loop.index < quiz.questions|length %}
+						<button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 shadow hover:bg-blue-600 transition duration-200" onclick="nextQuestion({{ loop.index }})">Suivant</button>
+					{% endif %}
 				</div>
 			{% endfor %}
-		</div>
+			<div class="text-center mt-6">
+				{{ form_widget(form.submit, { 'attr': { 'class': 'bg-green-500 text-white px-6 py-3 rounded-lg shadow hover:bg-green-600 transition duration-200' } }) }}
+			</div>
+			{{ form_end(form) }}
+		</form>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		let currentQuestionIndex = 1;
+// Commencer à la première question
 
-		<div class="form-group">
-			{{ form_widget(form.submit) }}
-			{# Ajoute le bouton une seule fois ici #}
-		</div>
+// Fonction pour aller à la question suivante
+function nextQuestion(currentIndex) { // Masquer la question actuelle
+document.getElementById('question-' + currentIndex).style.display = 'none';
 
-		{{ form_end(form) }}
-	</form>
+// Afficher la question suivante
+let nextQuestionIndex = currentIndex + 1;
+let nextQuestion = document.getElementById('question-' + nextQuestionIndex);
+
+if (nextQuestion) {
+nextQuestion.style.display = 'block';
+}
+
+// Si c'est la dernière question, afficher le bouton Soumettre
+if (!document.getElementById('question-' + (
+currentIndex + 1
+))) {
+document.getElementById('submit-btn').style.display = 'block';
+}
+}
+	</script>
 {% endblock %}

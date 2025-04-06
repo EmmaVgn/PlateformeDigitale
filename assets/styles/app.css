@@ -88,4 +88,36 @@ a.active {
   left: 100%;
 }
 
-/* Animation navbar */
+.answers {
+  display: flex;
+  flex-direction: column; /* Aligner les éléments verticalement */
+  gap: 1rem; /* Espacement entre les options */
+}
+
+.answer-option {
+  display: flex;
+  align-items: center; /* Aligner la case à cocher avec le texte */
+  gap: 10px; /* Espacement entre la case et le texte */
+}
+
+.answer-input {
+  width: 20px; /* Taille de la case à cocher */
+  height: 20px;
+  cursor: pointer; /* Coursuer pointer sur la case */
+}
+
+.answer-label {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.8rem;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer; /* Coursuer pointer sur le texte */
+}
+
+.answer-label:hover {
+  background-color: #f0f4f8; /* Changer de couleur de fond au survol */
+  border-color: #1c64f2; /* Changer la couleur de bordure au survol */
+}
