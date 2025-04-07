@@ -37,6 +37,24 @@
 			{% else %}
 				<p class="text-gray-600">Vous n'avez encore aucune formation en cours.</p>
 			{% endif %}
+
+			<h2 class="text-2xl font-bold mt-8 mb-4">Mes résultats aux quiz</h2>
+
+			{% if quizResults is empty %}
+				<p class="text-gray-600">Aucun quiz complété pour le moment.</p>
+			{% else %}
+				<ul class="space-y-4">
+					{% for result in quizResults %}
+						<li class="bg-white rounded-lg shadow p-4">
+							<h3 class="text-lg font-semibold">{{ result.quiz.title }}</h3>
+							<p>Score :
+								<strong>{{ result.score }}/{{ result.total }}</strong>
+							</p>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+
 		</section>
 	</div>
 {% endblock %}
