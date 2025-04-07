@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forum
+{% endblock %}
+
+{% block body %}
+	<div
+		class="max-w-4xl mx-auto py-10 px-4">
+
+		{# Titre et bouton "nouveau sujet" #}
+		<div class="flex justify-between items-center mb-6">
+			<h1 class="text-3xl font-bold font-['Special_Elite'] text-[#032b35]">Forum</h1>
+			<a href="{{ path('app_forum_new') }}" class="bg-[#085669] text-[#f5f5e9] px-4 py-2 rounded-xl font-['Roboto_Slab'] hover:opacity-90 transition">
+				Nouveau sujet
+			</a>
+		</div>
+
+		{# Barre de recherche #}
+		<form method="get" action="{{ path('app_forum') }}" class="flex gap-2 mb-8">
+			<input type="text" name="q" value="{{ app.request.get('q') }}" placeholder="Rechercher un sujet..." class="w-full p-3 rounded-xl border border-gray-300 font-['Roboto_Slab'] text-sm">
+			<button type="submit" class="bg-[#085669] text-[#f5f5e9] px-4 py-2 rounded-xl font-['Roboto_Slab'] hover:opacity-90 transition">
+				Rechercher
+			</button>
+		</form>
+
+		{# Affichage des résultats (filtrés ou non) #}
+		{% if app.request.get('q') %}
+			<p class="mb-4 text-sm font-['Roboto_Slab'] text-[#032b35]">
+				Résultats pour :
+				<strong>"{{ app.request.get('q') }}"</strong>
+			</p>
+		{% endif %}
+
+		{% if topics|length == 0 %}
+			<p class="font-['Roboto_Slab'] text-[#032b35]">Aucun sujet trouvé.</p>
+		{% else %}
+			<div class="space-y-4">
+				{% for topic in topics %}
+					<a href="{{ path('app_forum_show', {id: topic.id}) }}" class="block p-4 bg-[#f5f5e9] rounded-2xl border-l-4 border-[#085669] hover:bg-[#eae9d7] transition">
+						<div class="flex justify-between items-start">
+							<div>
+								<h2 class="text-xl font-semibold font-['Roboto_Slab'] text-[#032b35]">
+									{{ topic.title }}
+								</h2>
+								<p class="text-sm text-gray-700 mt-1 font-['Roboto_Slab']">
+									{{ topic.content|striptags|slice(0, 100) ~ '...' }}
+								</p>
+								<p class="text-xs text-gray-500 mt-2 font-['Roboto_Slab']">
+									Par
+									{{ topic.author.firstName }}
+									–
+									{{ topic.createdAt|date('d/m/Y à H:i') }}
+								</p>
+							</div>
+							<div class="text-sm text-white bg-[#085669] px-3 py-1 rounded-full font-['Roboto_Slab']">
+								{{ topic.forumMessages|length }}
+								réponses
+							</div>
+						</div>
+					</a>
+				{% endfor %}
+			</div>
+
+			{# Pagination avec KnpPaginator #}
+			<div class="mt-8">
+				{{ knp_pagination_render(topics) }}
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

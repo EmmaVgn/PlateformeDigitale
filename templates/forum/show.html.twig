@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ topic.title }}
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<h1 class="mb-3 text-3xl font-bold text-[#032b35]">
+			{{ topic.title }}
+		</h1>
+
+		<div class="mb-4 p-5 rounded-xl shadow" style="background-color:rgb(238, 230, 213); font-family: 'Roboto Slab';">
+			<p class="text-[#032b35] text-base whitespace-pre-line">
+				{{ topic.content|nl2br }}
+			</p>
+			<small class="text-sm text-gray-700 block mt-2">
+				Par
+				{{ topic.author.firstName }}
+				– le
+				{{ topic.createdAt|date('d/m/Y à H:i') }}
+			</small>
+		</div>
+
+
+		<h3 class="mt-5" style="text-decoration: underline;">Réponses</h3>
+
+		{% for message in topic.forumMessages %}
+			<div class="mb-3 p-2 border-start border-3" style="border-color: #085669; font-family: 'Roboto Slab';">
+				<p>{{ message.content|nl2br }}</p>
+				<small class="text-muted">Par
+					{{ message.author.firstName }}
+					–
+					{{ message.createdAt|date('d/m/Y à H:i') }}</small>
+				<hr>
+			</div>
+		{% else %}
+			<p>Aucune réponse pour l’instant.</p>
+		{% endfor %}
+
+		<h4 class="text-xl mt-8  text-[#032b35]">Répondre</h4>
+
+		<div class="mt-4 p-4 bg-[#e1e7e1] rounded-2xl shadow-md">
+			{{ form_start(form) }}
+
+			<div class="mb-4">
+				{{ form_widget(form.content, {
+            attr: {
+                class: 'w-full p-3 rounded-xl border border-gray-300 font-["Roboto_Slab"] text-sm',
+                rows: 4,
+                placeholder: "Écrivez votre réponse ici..."
+            }
+        }) }}
+				{{ form_errors(form.content) }}
+			</div>
+
+			<div class="text-right">
+				<button type="submit" class="bg-[#085669] text-[#f5f5e9] px-4 py-2 rounded-xl font-['Roboto_Slab'] hover:opacity-90 transition">
+					{{ form.submit.vars.label|default('Répondre') }}
+				</button>
+			</div>
+
+			{{ form_rest(form) }}
+			{{ form_end(form, { render_rest: false }) }}
+		</div>
+
+	</div>
+{% endblock %}

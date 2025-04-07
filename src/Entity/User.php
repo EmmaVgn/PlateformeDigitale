@@ -73,6 +73,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Progression::class, orphanRemoval: true)]
     private Collection $progressions;
+
+    /**
+     * @var Collection<int, ForumTopic>
+     */
+    #[ORM\OneToMany(targetEntity: ForumTopic::class, mappedBy: 'author')]
+    private Collection $forumTopics;
+
+    /**
+     * @var Collection<int, ForumMessage>
+     */
+    #[ORM\OneToMany(targetEntity: ForumMessage::class, mappedBy: 'author')]
+    private Collection $forumMessages;
         
     public function __construct()
     {
@@ -80,6 +92,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->formations = new ArrayCollection();
         $this->userAnswers = new ArrayCollection();
         $this->progressions = new ArrayCollection();
+        $this->forumTopics = new ArrayCollection();
+        $this->forumMessages = new ArrayCollection();
     }
 
     /**
@@ -314,5 +328,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getProgressions(): Collection
     {
         return $this->progressions;
+    }
+
+    /**
+     * @return Collection<int, ForumTopic>
+     */
+    public function getForumTopics(): Collection
+    {
+        return $this->forumTopics;
+    }
+
+    public function addForumTopic(ForumTopic $forumTopic): static
+    {
+        if (!$this->forumTopics->contains($forumTopic)) {
+            $this->forumTopics->add($forumTopic);
+            $forumTopic->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeForumTopic(ForumTopic $forumTopic): static
+    {
+        if ($this->forumTopics->removeElement($forumTopic)) {
+            // set the owning side to null (unless already changed)
+            if ($forumTopic->getAuthor() === $this) {
+                $forumTopic->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ForumMessage>
+     */
+    public function getForumMessages(): Collection
+    {
+        return $this->forumMessages;
+    }
+
+    public function addForumMessage(ForumMessage $forumMessage): static
+    {
+        if (!$this->forumMessages->contains($forumMessage)) {
+            $this->forumMessages->add($forumMessage);
+            $forumMessage->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeForumMessage(ForumMessage $forumMessage): static
+    {
+        if ($this->forumMessages->removeElement($forumMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($forumMessage->getAuthor() === $this) {
+                $forumMessage->setAuthor(null);
+            }
+        }
+
+        return $this;
     }
 }
