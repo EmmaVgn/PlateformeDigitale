@@ -7,6 +7,14 @@
  */
 import './styles/app.css';
 
+
+
+import { startStimulusApp } from '@symfony/stimulus-bundle';
+const app = startStimulusApp();
+
+import TestController from './controllers/test_controller.js';
+app.register('test', TestController);
+
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -26,3 +34,4 @@ links.forEach(link => {
         this.classList.add('active');
     });
 });
+

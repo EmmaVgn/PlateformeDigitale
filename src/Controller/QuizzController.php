@@ -41,21 +41,25 @@ class QuizzController extends AbstractController
         // Créer un formulaire pour les réponses
         $formBuilder = $this->createFormBuilder();
 
-        // Ajouter des cases à cocher pour chaque question
         foreach ($quiz->getQuestions() as $question) {
-            $formBuilder->add('answers_' . $question->getId(), ChoiceType::class, [
-                'choices' => $question->getAnswers()->toArray(),
-                'expanded' => true,
-                'multiple' => false,
-                'choice_label' => function (Answer $answer) {
-                    return $answer->getContent(); // Afficher le contenu de chaque réponse
-                },
-                'choice_value' => function (?Answer $answer) {
-                    return $answer ? $answer->getId() : null; // Utiliser l'ID de la réponse comme valeur
-                },
-                'label' => $question->getContent(), // Afficher la question comme label
-            ]);
+$formBuilder->add('answers_' . $question->getId(), ChoiceType::class, [
+    'choices' => $question->getAnswers()->toArray(),
+    'expanded' => true, // Render as radio buttons
+    'multiple' => false, // Single selection
+    'choice_label' => function (Answer $answer) {
+        return $answer->getContent(); // Display the answer content
+    },
+    'choice_value' => function (?Answer $answer) {
+        return $answer ? $answer->getId() : null; // Use the ID as the value
+    },
+    'label' => false, // Avoid displaying extra labels
+]);
+
         }
+        
+        $form = $formBuilder->getForm();
+        
+        
 
         // Ajouter un bouton de soumission
         $formBuilder->add('submit', SubmitType::class, ['label' => 'Soumettre mes réponses']);

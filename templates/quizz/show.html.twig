@@ -1,53 +1,82 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Quiz -
 	{{ quiz.title }}
 {% endblock %}
+
 {% block body %}
 	<div class="container mx-auto p-6">
 		<h1 class="text-center text-3xl font-bold text-blue-600 mb-6">{{ quiz.title }}</h1>
-		<form method="post" class="bg-gray-100 p-6 rounded-lg shadow-lg">
-			{{ form_start(form) }}
-			{% for question in quiz.questions %}
-				<div class="question space-y-4" id="question-{{ loop.index }}" style="display: {% if loop.index == 1 %}block{% else %}none{% endif %}">
-					<h3 class="text-lg font-semibold text-gray-800">{{ question.content }}</h3>
-					<div class="answers flex flex-col space-y-4">
-						{{ form_widget(form['answers_' ~ question.id], { 'attr': { 'class': 'block bg-white border border-gray-300 rounded-lg p-4 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500' } }) }}
-					</div>
-					{% if loop.index < quiz.questions|length %}
-						<button type="button" class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 shadow hover:bg-blue-600 transition duration-200" onclick="nextQuestion({{ loop.index }})">Suivant</button>
-					{% endif %}
+
+		{{ form_start(form, {'attr': {'class':'bg-gray-100 p-6 rounded-lg shadow-lg'}}) }}
+
+		{% for question in quiz.questions %}
+			<div class="question space-y-4" id="question-{{ loop.index }}" style="{{ loop.first ? 'display:block' : 'display:none' }}">
+
+				<h3 class="text-lg font-semibold text-gray-800">{{ question.content }}</h3>
+
+				<div class="answers grid grid-cols-1 md:grid-cols-2 gap-4">
+					{% for answer in question.answers %}
+						<div class="answer-option flex items-center gap-3">
+							<input type="radio" id="answer_{{ answer.id }}" name="form[answers_{{ question.id }}]" value="{{ answer.id }}" class="answer-input"/>
+							<label for="answer_{{ answer.id }}" class="answer-label cursor-pointer">
+								{{ answer.content }}
+							</label>
+						</div>
+					{% endfor %}
 				</div>
-			{% endfor %}
-			<div class="text-center mt-6">
-				{{ form_widget(form.submit, { 'attr': { 'class': 'bg-green-500 text-white px-6 py-3 rounded-lg shadow hover:bg-green-600 transition duration-200' } }) }}
 			</div>
-			{{ form_end(form, { render_rest: false }) }}
-		</form>
+		{% endfor %}
+
+		<div class="text-center mt-6">
+			<button type="button" class="btn-next bg-blue-500 text-dark px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition duration-200" onclick="nextQuestion()">
+				Suivant
+			</button>
+
+			<button type="submit" class="btn-submit bg-blue-500 text-dark  px-6 py-3 rounded-lg shadow hover:bg-green-600 transition duration-200" style="display:none;">
+				Soumettre mes réponses
+			</button>
+		</div>
+
+		{{ form_row(form._token) }}
+		{{ form_end(form, {'render_rest': false}) }}
 	</div>
 {% endblock %}
+
 {% block javascripts %}
 	{{ parent() }}
 	<script>
-		let currentQuestionIndex = 1;
-// Commencer à la première question
+		let currentQuestionIndex = 0;
 
-// Fonction pour aller à la question suivante
-function nextQuestion(currentIndex) { // Masquer la question actuelle
-document.getElementById('question-' + currentIndex).style.display = 'none';
+function nextQuestion() { // Vérifier si une réponse est sélectionnée pour la question actuelle
+let currentQuestionDiv = document.getElementById('question-' + (
+currentQuestionIndex + 1
+));
+let checkedAnswer = currentQuestionDiv.querySelector('input[type="radio"]:checked');
 
-// Afficher la question suivante
-let nextQuestionIndex = currentIndex + 1;
-let nextQuestion = document.getElementById('question-' + nextQuestionIndex);
-
-if (nextQuestion) {
-nextQuestion.style.display = 'block';
+if (! checkedAnswer) {
+alert('Vous devez répondre à la question avant de continuer.');
+return; // Bloquer si aucune réponse n’est sélectionnée
 }
 
-// Si c'est la dernière question, afficher le bouton Soumettre
+// Masquer la question actuelle
+currentQuestionDiv.style.display = 'none';
+currentQuestionIndex++;
+
+// Afficher la question suivante
+let nextQuestionDiv = document.getElementById('question-' + (
+currentQuestionIndex + 1
+));
+if (nextQuestionDiv) {
+nextQuestionDiv.style.display = 'block';
+}
+
+// Si c'est la dernière question, ajuster les boutons
 if (!document.getElementById('question-' + (
-currentIndex + 1
+currentQuestionIndex + 2
 ))) {
-document.getElementById('submit-btn').style.display = 'block';
+document.querySelector('.btn-submit').style.display = 'inline-block';
+document.querySelector('.btn-next').style.display = 'none';
 }
 }
 	</script>

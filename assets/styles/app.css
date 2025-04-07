@@ -121,3 +121,80 @@ a.active {
   background-color: #f0f4f8; /* Changer de couleur de fond au survol */
   border-color: #1c64f2; /* Changer la couleur de bordure au survol */
 }
+
+.quiz-container {
+  max-width: 600px;
+  margin: auto;
+  background: #f5f5e9;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-container h2 {
+  font-family: "Special Elite", cursive;
+  margin-bottom: 1rem;
+}
+
+.next-btn {
+  background: #085669;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.progress-bar {
+  margin-top: 1rem;
+  background: #ddd;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  background: #085669;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.progress-bar {
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.progress {
+  height: 100%;
+  background: #085669;
+  transition: width 0.3s ease-in-out;
+}
