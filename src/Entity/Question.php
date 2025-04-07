@@ -31,6 +31,12 @@ class Question
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: UserAnswer::class, cascade: ['remove'])]
     private Collection $userAnswers;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $explanation = null;
+
+    #[ORM\Column(type: 'integer')]
+    private int $points = 1;
+
     public function __construct()
     {
         $this->answers = new ArrayCollection();
@@ -128,6 +134,28 @@ class Question
             }
         }
 
+        return $this;
+    }
+
+    public function getExplanation(): ?string
+    {
+        return $this->explanation;
+    }
+
+    public function setExplanation(?string $explanation): static
+    {
+        $this->explanation = $explanation;
+        return $this;
+    }
+
+    public function getPoints(): int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(int $points): static
+    {
+        $this->points = $points;
         return $this;
     }
 }

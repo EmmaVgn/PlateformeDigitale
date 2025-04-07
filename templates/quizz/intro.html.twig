@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ quiz.title }}
+	– Introduction
+{% endblock %}
+
+{% block body %}
+	<div class="container mx-auto p-6">
+		<div class="bg-gray-100 rounded-xl shadow-lg p-8 text-center space-y-6">
+			<h1 class="text-4xl font-bold text-gray-800">{{ quiz.title }}</h1>
+
+			<div class="text-lg text-gray-700 space-y-2">
+				<p>
+					<strong>Nombre de questions :</strong>
+					{{ quiz.questions|length }}</p>
+				<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded">
+					Les points attribués sont indiqués pour chaque question.
+				</div>
+
+			</div>
+
+			<p class="italic text-gray-500">Le quiz va commencer automatiquement...</p>
+		</div>
+	</div>
+
+	<script>
+		setTimeout(function () {
+window.location.href = "{{ path('quiz_show', {'slug': quiz.slug}) }}";
+}, 4000); // redirige après 4 secondes
+	</script>
+{% endblock %}

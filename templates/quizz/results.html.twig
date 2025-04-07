@@ -1,29 +1,45 @@
-{# templates/quiz/results.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Résultats du Quiz -
+{% block title %}Résultats -
 	{{ quiz.title }}
 {% endblock %}
 
 {% block body %}
-	<div class="results-container">
-		<h1>Résultats du quiz :
-			{{ quiz.title }}</h1>
+	<div class="container mx-auto p-6">
+		<div class="bg-gray-100 rounded-xl shadow-lg p-8 space-y-6">
+			<h1 class="text-4xl font-bold text-gray-800 text-center">{{ quiz.title }}
+				- Résultats</h1>
 
-		<p>
-			<strong>Votre score :</strong>
-			{{ score }}
-			/
-			{{ total }}</p>
+			<p class="text-center text-2xl">
+				Vous avez obtenu :
+				<strong>{{ score }}/{{ totalPoints }}</strong>
+			</p>
 
-		<div>
-			{% if score >= (quiz.questions|length / 2) %}
-				<p class="text-green-500">Félicitations, vous avez réussi le quiz !</p>
-			{% else %}
-				<p class="text-red-500">Dommage, vous n'avez pas réussi le quiz. Essayez encore !</p>
-			{% endif %}
+			<div class="space-y-4">
+				{% for question in quiz.questions %}
+					<div class="bg-white p-4 rounded-lg shadow">
+						<h3 class="text-xl font-semibold">{{ loop.index }}.
+							{{ question.content }}</h3>
+
+						<div class="mt-2">
+							{% for answer in question.answers %}
+								<p class="{% if answer.isCorrect %}text-green-600{% else %}text-gray-600{% endif %}">
+									{% if answer.isCorrect %}✔️{% else %}✖️
+									{% endif %}
+									{{ answer.content }}
+								</p>
+							{% endfor %}
+						</div>
+
+						{% if question.explanation %}
+							<div class="mt-4 bg-blue-50 border-l-4 border-blue-400 p-3 rounded">
+								<strong>Explication :</strong>
+								{{ question.explanation }}
+							</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
 		</div>
-
-		<a href="{{ path('quiz_show', {'slug': quiz.slug}) }}" class="btn btn-primary">Reprendre le quiz</a>
 	</div>
 {% endblock %}

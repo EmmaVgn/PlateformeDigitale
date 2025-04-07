@@ -43,6 +43,11 @@ class Quiz
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $estimatedDuration = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pointSystem = null;
+    
+
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -181,6 +186,17 @@ class Quiz
     {
         // Par exemple : 1,5 minute par question
         $this->estimatedDuration = ceil(count($this->questions) * 1.5);
+    }
+
+    public function getPointSystem(): ?string
+    {
+        return $this->pointSystem;
+    }
+
+    public function setPointSystem(?string $pointSystem): static
+    {
+        $this->pointSystem = $pointSystem;
+        return $this;
     }
 
 }

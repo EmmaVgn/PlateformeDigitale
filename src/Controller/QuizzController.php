@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class QuizzController extends AbstractController
@@ -28,9 +29,29 @@ class QuizzController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/quiz/{slug}', name: 'quiz_show')]
-    public function show(string $slug, Request $request, UserAnswerRepository $userAnswerRepository): Response
+    #[Route('/quiz/{slug}/intro', name: 'quiz_intro')]
+    public function intro(string $slug,  SessionInterface $session): Response
     {
+        $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['slug' => $slug]);
+
+        if (!$quiz) {
+            throw $this->createNotFoundException('Le quiz demandé n\'existe pas.');
+        }
+
+        $session->set('quiz_intro_seen_' . $slug, true);
+
+        return $this->render('quizz/intro.html.twig', [
+            'quiz' => $quiz,
+        ]);
+    }
+
+    #[Route('/quiz/{slug}', name: 'quiz_show')]
+    public function show(string $slug,SessionInterface $session, Request $request, UserAnswerRepository $userAnswerRepository): Response
+    {
+            // Si l'utilisateur n'a pas visité l'intro, on le redirige
+        if (!$session->get('quiz_intro_seen_' . $slug)) {
+            return $this->redirectToRoute('quiz_intro', ['slug' => $slug]);
+        }
         // Récupérer le quiz à partir du slug
         $quiz = $this->entityManager->getRepository(Quiz::class)->findOneBy(['slug' => $slug]);
 
@@ -42,18 +63,18 @@ class QuizzController extends AbstractController
         $formBuilder = $this->createFormBuilder();
 
         foreach ($quiz->getQuestions() as $question) {
-$formBuilder->add('answers_' . $question->getId(), ChoiceType::class, [
-    'choices' => $question->getAnswers()->toArray(),
-    'expanded' => true, // Render as radio buttons
-    'multiple' => false, // Single selection
-    'choice_label' => function (Answer $answer) {
-        return $answer->getContent(); // Display the answer content
-    },
-    'choice_value' => function (?Answer $answer) {
-        return $answer ? $answer->getId() : null; // Use the ID as the value
-    },
-    'label' => false, // Avoid displaying extra labels
-]);
+        $formBuilder->add('answers_' . $question->getId(), ChoiceType::class, [
+            'choices' => $question->getAnswers()->toArray(),
+            'expanded' => true, // Render as radio buttons
+            'multiple' => false, // Single selection
+            'choice_label' => function (Answer $answer) {
+                return $answer->getContent(); // Display the answer content
+            },
+            'choice_value' => function (?Answer $answer) {
+                return $answer ? $answer->getId() : null; // Use the ID as the value
+            },
+            'label' => false, // Avoid displaying extra labels
+        ]);
 
         }
         
@@ -131,16 +152,24 @@ $formBuilder->add('answers_' . $question->getId(), ChoiceType::class, [
     
         // Calcul du score
         $userAnswers = $userAnswerRepository->findByUserAndQuiz($user, $quiz);
+        $score = 0;
+        $totalPoints = 0;
+        
+        foreach ($quiz->getQuestions() as $question) {
+            $totalPoints += $question->getPoints();
+        }
+        
         foreach ($userAnswers as $userAnswer) {
             if ($userAnswer->getAnswer()->isCorrect()) {
-                $score++;
+                $score += $userAnswer->getQuestion()->getPoints();
             }
         }
-    
+        
         // Enregistrer la complétion du quiz si non déjà faite
         $existingCompletion = $quizCompletionRepository->findOneBy([
             'user' => $user,
             'quiz' => $quiz,
+            
         ]);
     
         if (!$existingCompletion) {
@@ -186,6 +215,7 @@ $formBuilder->add('answers_' . $question->getId(), ChoiceType::class, [
             'quiz' => $quiz,
             'score' => $score,
             'total' => $totalQuestions,
+            'totalPoints' => $totalPoints,
         ]);
     }
     

@@ -28,6 +28,7 @@ class QuizCrudController extends AbstractCrudController
             TextField::new('title'),
             AssociationField::new('questions'), // Associer plusieurs questions au quiz
             IntegerField::new('estimatedDuration')->setLabel('Durée estimée (min)')
+            
 
         ];
     }

@@ -6,7 +6,8 @@ use App\Entity\Question;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class QuestionCrudController extends AbstractCrudController
@@ -19,8 +20,11 @@ class QuestionCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('content'),
-            AssociationField::new('quiz'),  // Associer la question à un quiz via un champ de relation ManyToOne
+            TextField::new('content', 'Intitulé de la question'),
+            IntegerField::new('points', 'Points pour cette question'),
+            TextareaField::new('explanation', 'Explication')->hideOnIndex(),
+            AssociationField::new('quiz', 'Quiz associé'),
         ];
     }
+    
 }

@@ -58,9 +58,11 @@
 									min</span>
 							{% endif %}
 						</div>
-						<a href="{{ path('quiz_show', {'slug': quiz.slug}) }}" class="text-sm text-indigo-600 hover:underline font-medium">
-							Lancer le quiz
+						<a href="{{ path('quiz_intro', {'slug': quiz.slug}) }}" class="inline-block bg-green-500 text-white px-6 py-3 rounded-lg shadow hover:bg-green-600 transition duration-200">
+							Commencer le quiz
 						</a>
+
+
 					</li>
 				{% endfor %}
 			</ul>
