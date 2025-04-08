@@ -23,11 +23,15 @@
 							</div>
 						{% endif %}
 
-						{% if totalDuration > 0 %}
+						{% if remainingDuration == 0 %}
+							<div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
+								🎉 Félicitations ! Vous avez terminé tous les contenus de cette formation.
+							</div>
+						{% else %}
 							<p class="mt-5 text-sm text-blue-800">
-								🕒 Temps estimé :
-								{% set hours = (totalDuration // 60) %}
-								{% set minutes = (totalDuration % 60) %}
+								⏳ Temps estimé restant :
+								{% set hours = (remainingDuration // 60) %}
+								{% set minutes = (remainingDuration % 60) %}
 								{{ hours > 0 ? hours ~ 'h ' : '' }}{{ minutes }}min
 							</p>
 						{% endif %}

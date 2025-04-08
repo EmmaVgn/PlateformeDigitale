@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\UserFormation;
 use App\Repository\FormationRepository;
-use App\Repository\ProgressionRepository;
+use App\Repository\ModuleViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ProgressionRepository;
+use App\Repository\QuizCompletionRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,9 +42,10 @@ class FormationController extends AbstractController
     
 
     #[Route('/formation/{slug}', name: 'app_formation_show')]
-    public function show(string $slug, FormationRepository $formationRepository, ProgressionRepository $progressionRepository): Response
+    public function show(string $slug, FormationRepository $formationRepository, ProgressionRepository $progressionRepository, ModuleViewRepository $moduleViewRepository, QuizCompletionRepository $quizCompletionRepository): Response
     {
         $formation = $formationRepository->findOneBy(['slug' => $slug]);
+        
 
         if (!$formation || !$formation->isPublished()) {
             throw $this->createNotFoundException('Formation introuvable.');
@@ -67,22 +70,53 @@ class FormationController extends AbstractController
             'user' => $this->getUser(),
             'formation' => $formation
         ]);
-        
+
         $progress = $progression ? $progression->getProgress() : 0;
 
+        
         $modules = $formation->getModules();
-
         $totalMinutes = 0;
-
+        $userMinutes = 0;
+    
         foreach ($modules as $module) {
-            foreach ($module->getPdfs() as $pdf) {
-                $totalMinutes += $pdf->getEstimatedDuration() ?? 0;
+            $moduleViewed = $moduleViewRepository->findOneBy([
+                'user' => $this->getUser(),
+                'module' => $module
+            ]);
+        
+            foreach ($modules as $module) {
+                $moduleViewed = $moduleViewRepository->findOneBy([
+                    'user' => $this->getUser(),
+                    'module' => $module
+                ]);
+            
+                foreach ($module->getPdfs() as $pdf) {
+                    $duration = $pdf->getEstimatedDuration() ?? 0;
+                    $totalMinutes += $duration;
+            
+                    if ($moduleViewed) {
+                        $userMinutes += $duration;
+                    }
+                }
+            }
+            
+        }
+        
+        $quizCompletions = $quizCompletionRepository->findBy(['user' => $this->getUser()]);
+        $completedQuizIds = array_map(fn($qc) => $qc->getQuiz()->getId(), $quizCompletions);
+        
+        foreach ($formation->getQuizzes() as $quiz) {
+            $duration = $quiz->getEstimatedDuration() ?? 0;
+            $totalMinutes += $duration;
+        
+            if (in_array($quiz->getId(), $completedQuizIds)) {
+                $userMinutes += $duration;
             }
         }
-
-        foreach ($formation->getQuizzes() as $quiz) {
-            $totalMinutes += $quiz->getEstimatedDuration() ?? 0;
-        }   
+        
+    
+        $remainingMinutes = max(0, $totalMinutes - $userMinutes);
+     
 
 
         return $this->render('formation/show.html.twig', [
@@ -92,6 +126,7 @@ class FormationController extends AbstractController
             'progress' => $progress,
             'modules' => $modules,
             'totalDuration' => $totalMinutes,
+            'remainingDuration' => $remainingMinutes,
         ]);
     }
 
