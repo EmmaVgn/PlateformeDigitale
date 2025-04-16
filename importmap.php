@@ -43,4 +43,5 @@ return [
         'path' => './assets/js/stars.js',
         'entrypoint' => true,
     ],
+
 ];

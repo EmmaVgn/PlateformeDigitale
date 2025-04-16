@@ -152,6 +152,25 @@ class FormationController extends AbstractController
             ]);
         }
 
+        // Récupérer les avis validés
+        $reviewValidated = $reviewRepository->findBy(['isValidated' => true]);
+
+        // Calculer la moyenne des notes
+        $moyenne = 0;
+        if (count($reviewValidated) > 0) {
+            $total = 0;
+            foreach ($reviewValidated as $avis) {
+                $total += $avis->getRating();
+            }
+            $moyenne = $total / count($reviewValidated);
+        }
+
+        $recentReviews = $reviewRepository->findBy(
+            ['isValidated' => true], // Filtre pour les avis validés
+            ['createdAt' => 'DESC'],  // Trier par date de création (ou ID)
+            3                        // Limiter à 6 avis
+        );
+
         return $this->render('formation/show.html.twig', [
             'formation' => $formation,
             'inscription' => $inscription,
@@ -160,7 +179,10 @@ class FormationController extends AbstractController
             'modules' => $modules,
             'totalDuration' => $totalMinutes,
             'remainingDuration' => $remainingMinutes,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'moyenne' => $moyenne,
+            'avis' => $reviewValidated,
+            'recentReviews' => $recentReviews, 
 
         ]);
     }
