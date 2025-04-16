@@ -1,21 +1,31 @@
 {% block body %}
-	<h1 class="text-center">DONNER VOTRE AVIS</h1>
-	<div class="row mt-5 d-flex align-items-center flex-column">
-		<h4 class="text-center">Votre avis est très important pour nous !</h4>
-		<div class="col-md-6">
-			{{ form_start(form) }}
-			{{ form_errors(form) }}
-			{{ form_row(form.comment, {'attr': {'class': 'my-custom-class'}}) }}
-			<div class="star-rating mb-3">
-				<span>Note sur 5 :</span>
-				{% for i in 1..5 %}
-					<i class="far fa-star" data-rating="{{ i }}" data-index="{{ i }}"></i>
-				{% endfor %}
+
+	<div
+		class="row mt-5">
+
+
+		<!-- Afficher le formulaire d'avis uniquement si l'utilisateur est inscrit -->
+		{% if isEnrolled and not hasReviewed %}
+			<h4 class="text-center">Votre avis est très important pour nous !</h4>
+			<div class="col-md-6">
+				{{ form_start(form) }}
+				{{ form_errors(form) }}
+				{{ form_row(form.comment, {'attr': {'class': 'my-custom-class'}}) }}
+				<div class="star-rating mb-3">
+					<span>Note sur 5 :</span>
+					{% for i in 1..5 %}
+						<i class="far fa-star" data-rating="{{ i }}" data-index="{{ i }}"></i>
+					{% endfor %}
+				</div>
+				<input type="hidden" id="review_form_rating" name="review[rating]" value="{{ form.rating.vars.value }}">
+				<button type="submit" class="btn btn-secondary">Envoyer</button>
+				{{ form_end(form) }}
 			</div>
-			<input type="hidden" id="review_form_rating" name="review[rating]" value="{{ form.rating.vars.value }}">
-			<button type="submit" class="btn btn-secondary">Envoyer</button>
-			{{ form_end(form) }}
-		</div>
+		{% elseif hasReviewed %}
+			<p class="text-center mt-4">Vous avez déjà laissé un avis pour cette formation. Merci de votre contribution !</p>
+		{% elseif not isEnrolled %}
+			<p class="text-center mt-4">Vous devez être inscrit à cette formation pour pouvoir laisser un avis.</p>
+		{% endif %}
 	</div>
 {% endblock %}
 

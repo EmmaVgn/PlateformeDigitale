@@ -65,9 +65,13 @@ class FormationController extends AbstractController
             throw $this->createNotFoundException('Formation introuvable.');
         }
     
+        // Vérifier si l'utilisateur est connecté
+        $user = $this->getUser();
+        $isEnrolled = false;
+
+        // Vérifier si l'utilisateur est inscrit à cette formation et validé
         $inscriptionValide = false;
         $inscription = null;
-    
         if ($this->getUser()) {
             foreach ($formation->getInscriptions() as $item) {
                 if ($item->getUser() === $this->getUser()) {
@@ -79,7 +83,7 @@ class FormationController extends AbstractController
                 }
             }
         }
-    
+
         $progression = $progressionRepository->findOneBy([
             'user' => $this->getUser(),
             'formation' => $formation
@@ -119,6 +123,12 @@ class FormationController extends AbstractController
         }
         
         $remainingMinutes = max(0, $totalMinutes - $userMinutes);
+
+        // Vérifier si l'utilisateur a déjà laissé un avis pour cette formation
+    $existingReview = $reviewRepository->findOneBy([
+        'user' => $user,
+        'formation' => $formation
+    ]);
         $review = new Review();
         $form = $this->createForm(ReviewType::class, $review);
         $form->handleRequest($request);
@@ -183,7 +193,8 @@ class FormationController extends AbstractController
             'moyenne' => $moyenne,
             'avis' => $reviewValidated,
             'recentReviews' => $recentReviews, 
-
+            'isEnrolled' => $isEnrolled, // Utilisé pour afficher le formulaire d'avis
+            'hasReviewed' => $existingReview !== null,
         ]);
     }
     
