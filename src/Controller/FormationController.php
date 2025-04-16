@@ -68,6 +68,8 @@ class FormationController extends AbstractController
         // Vérifier si l'utilisateur est connecté
         $user = $this->getUser();
         $isEnrolled = false;
+        $hasReviewed = false;
+        $existingReview = null; // Définir à null
 
         // Vérifier si l'utilisateur est inscrit à cette formation et validé
         $inscriptionValide = false;
@@ -124,11 +126,19 @@ class FormationController extends AbstractController
         
         $remainingMinutes = max(0, $totalMinutes - $userMinutes);
 
-        // Vérifier si l'utilisateur a déjà laissé un avis pour cette formation
-    $existingReview = $reviewRepository->findOneBy([
-        'user' => $user,
-        'formation' => $formation
-    ]);
+        // Si l'utilisateur est connecté, vérifier l'inscription et l'avis
+        if ($user) {
+            // Vérifier si l'utilisateur est inscrit à cette formation
+            $userFormation = $userFormationRepository->findOneBy(['user' => $user, 'formation' => $formation]);
+            $isEnrolled = $userFormation !== null;
+    
+            // Vérifier si l'utilisateur a déjà laissé un avis pour cette formation
+            $existingReview = $reviewRepository->findOneBy([
+                'user' => $user,
+                'formation' => $formation
+            ]);
+            $hasReviewed = $existingReview !== null; // Mettre à jour la variable
+        }
         $review = new Review();
         $form = $this->createForm(ReviewType::class, $review);
         $form->handleRequest($request);
@@ -194,7 +204,7 @@ class FormationController extends AbstractController
             'avis' => $reviewValidated,
             'recentReviews' => $recentReviews, 
             'isEnrolled' => $isEnrolled, // Utilisé pour afficher le formulaire d'avis
-            'hasReviewed' => $existingReview !== null,
+            'hasReviewed' => $existingReview,
         ]);
     }
     
@@ -219,7 +229,7 @@ class FormationController extends AbstractController
         foreach ($formation->getInscriptions() as $inscription) {
             if ($inscription->getUser() === $user) {
                 $this->addFlash('warning', 'Vous êtes déjà inscrit à cette formation.');
-                return $this->redirectToRoute('formation_show', ['slug' => $slug]);
+                return $this->redirectToRoute('app_formation_show', ['slug' => $slug]);
             }
         }
     
@@ -234,7 +244,7 @@ class FormationController extends AbstractController
     
         $this->addFlash('success', 'Vous êtes maintenant inscrit à cette formation.');
     
-        return $this->redirectToRoute('formation_show', ['slug' => $slug]);
+        return $this->redirectToRoute('app_formation_show', ['slug' => $slug]);
     }
 
 
