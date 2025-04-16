@@ -5,14 +5,15 @@ namespace App\Controller;
 use App\Entity\Review;
 use App\Form\ReviewType;
 use App\Entity\UserFormation;
+use App\Service\SendMailService;
 use App\Repository\ReviewRepository;
 use App\Repository\FormationRepository;
 use App\Repository\ModuleViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProgressionRepository;
+use App\Repository\UserFormationRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\QuizCompletionRepository;
-use App\Repository\UserFormationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,7 +56,8 @@ class FormationController extends AbstractController
         Request $request,   
         ReviewRepository $reviewRepository,
         EntityManagerInterface $entityManager,
-        UserFormationRepository $userFormationRepository
+        UserFormationRepository $userFormationRepository,
+        SendMailService $mail
     ): Response {
         $formation = $formationRepository->findOneBy(['slug' => $slug]);
         
@@ -117,41 +119,39 @@ class FormationController extends AbstractController
         }
         
         $remainingMinutes = max(0, $totalMinutes - $userMinutes);
-        $reviews = $reviewRepository->findBy(['formation' => $formation, 'isValidated' => true], ['createdAt' => 'DESC']);
-    
-        // Calcul de la moyenne des avis
-        $averageRating = count($reviews) > 0
-            ? array_sum(array_map(fn(Review $review) => $review->getRating(), $reviews)) / count($reviews)
-            : 0;
-    
-        // Créer un nouveau commentaire
         $review = new Review();
-        $review->setFormation($formation); // Associer le commentaire à la formation
-    
-        // Lier l'avis à l'utilisateur authentifié
-        $review->setUser($this->getUser()); // Ajout de cette ligne
-    
         $form = $this->createForm(ReviewType::class, $review);
         $form->handleRequest($request);
     
-        // Vérifier si le formulaire a été soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-            // Ajoutez une vérification pour rating ici
-            if (null === $review->getRating()) {
-                $review->setRating(0); // Valeur par défaut si rating est null
+            // Associer l'avis à la formation
+            $review->setFormation($formation);
+    
+            // Associer l'avis à l'utilisateur
+            $user = $this->getUser();
+            if ($user !== null) {
+                $review->setUser($user);
             }
-            $review->setCreatedAt(new \DateTimeImmutable());
-            $review->setIsValidated(false); // Par défaut, les commentaires ne sont pas validés
+    
             $entityManager->persist($review);
             $entityManager->flush();
-            $this->addFlash('success', 'Votre commentaire a été soumis et sera visible après validation.');
+    
+            // Envoi de l'email (facultatif)
+            $mail->sendEmail(
+                'contact@cameleon-solutions.fr',
+                'Demande de contact',
+                'contact@cameleon-solutions.fr',
+                'Nouveau commentaire sur le site',
+                'review',
+                []
+            );
+    
+            $this->addFlash('success', 'Votre avis a bien été envoyé, il sera publié après validation !');
             return $this->redirectToRoute('app_formation_show', [
                 'slug' => $formation->getSlug(),
             ]);
-        } else {
-            $this->addFlash('error', 'Il y a eu un problème avec votre commentaire. Veuillez réessayer.');
         }
-    
+
         return $this->render('formation/show.html.twig', [
             'formation' => $formation,
             'inscription' => $inscription,
@@ -160,9 +160,8 @@ class FormationController extends AbstractController
             'modules' => $modules,
             'totalDuration' => $totalMinutes,
             'remainingDuration' => $remainingMinutes,
-            'averageRating' => $averageRating,
-            'ReviewForm' => $form->createView(),
-            'reviews' => $reviews,
+            'form' => $form->createView()
+
         ]);
     }
     

@@ -1,57 +1,24 @@
-<section class="testimonial sections" id="testimonial">
-	<h2 class="text-2xl font-title font-semibold text-primary mb-16">Avis des apprenants</h2>
-
-	{% if averageRating > 0 %}
-		<div class="mb-3">
-			<strong>Note moyenne:</strong>
-			<div class="col-md-6">
-				{% include "_partials/_rating.html.twig" with {'rating': averageRating } %}
-				<br>
-				<small>(Calculée sur
-					{{ reviews|length }}
-					avis)</small>
-			</div>
-		</div>
-	{% endif %}
-
-
-	{% if reviews|length > 0 %}
-		<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-			<div class="carousel-inner">
-				{% for review in reviews %}
-					<div class="carousel-item {% if loop.first %}active{% endif %}">
-						<div class="stars text-center mb-3">
-							{% include "_partials/_rating.html.twig" with {'rating': review.rating } %}
-						</div>
-						<blockquote class="fst-italic">{{ review.comment }}</blockquote>
-						<div class="row">
-							<div class="text-start">
-								<strong>{{ review.user}}</strong>
-							</div>
-						</div>
-					</div>
+{% block body %}
+	<h1 class="text-center">DONNER VOTRE AVIS</h1>
+	<div class="row mt-5 d-flex align-items-center flex-column">
+		<h4 class="text-center">Votre avis est très important pour nous !</h4>
+		<div class="col-md-6">
+			{{ form_start(form) }}
+			{{ form_errors(form) }}
+			{{ form_row(form.comment) }}
+			<div class="star-rating mb-3">
+				<span>Note sur 5 :</span>
+				{% for i in 1..5 %}
+					<i class="far fa-star" data-rating="{{ i }}" data-index="{{ i }}"></i>
 				{% endfor %}
 			</div>
-			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Previous</span>
-			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Next</span>
-			</button>
+			<input type="hidden" id="review_form_rating" name="review[rating]" value="{{ form.rating.vars.value }}">
+			<button type="submit" class="btn btn-secondary">Envoyer</button>
+			{{ form_end(form) }}
 		</div>
-	{% else %}
-		<div class="alert alert-info" role="alert">
-			Aucun avis pour le moment.
-		</div>
-	{% endif %}
-	<div class="add-review">
-		<a href="{{ path('home_notice') }}" class="btn-fill text-center text-decoration-none fs-3 text-lg-start bg-dark">Donnez votre avis</a>
 	</div>
-</section>
-{% block importmap %}
-	{# do NOT call parent() #}
+{% endblock %}
 
-	{{ importmap(['app',  'stars']) }}
+{% block importmap %}
+	{{ importmap(['app', 'stars']) }}
 {% endblock %}
