@@ -198,3 +198,37 @@ a.active {
   background: #085669;
   transition: width 0.3s ease-in-out;
 }
+
+/*--------------------------------------------------------------
+# Stars rating
+--------------------------------------------------------------*/
+.star-rating i {
+  cursor: pointer;
+}
+
+.star-rating > i.far.fa-star {
+  font-size: 24px;
+  color: #ccc;
+  transition: color 0.3s ease-in-out;
+}
+
+.star-rating > i.fa-star.fas {
+  font-size: 24px;
+  color: #f8d32b;
+}
+
+/*--------------------------------------------------------------
+  # Testimonials
+  --------------------------------------------------------------*/
+.testimonial {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+}
+@media screen and (max-width: 768px) {
+  .testimonial {
+    width: 80%;
+    margin: 20px auto 40px;
+    padding: 20px 20px 40px;
+  }
+}

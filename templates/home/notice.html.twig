@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Votre avis
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-center">DONNER VOTRE AVIS</h1>
+	<div class="row mt-5 d-flex align-items-center flex-column">
+		<h4 class="text-center">Votre avis est très important pour nous !</h4>
+		<div class="col-md-6">
+			{{ form_start(form) }}
+			{{ form_errors(form) }}
+			{{ form_row(form.comment) }}
+			<div class="star-rating mb-3">
+				<span>Note sur 5 :</span>
+				{% for i in 1..5 %}
+					<i class="far fa-star" data-rating="{{ i }}" data-index="{{ i }}"></i>
+				{% endfor %}
+			</div>
+			<input type="hidden" id="review_form_rating" name="review[rating]" value="{{ form.rating.vars.value }}">
+			<button type="submit" class="btn btn-secondary">Envoyer</button>
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}
+
+{% block importmap %}
+	{{ importmap(['app', 'stars']) }}
+{% endblock %}

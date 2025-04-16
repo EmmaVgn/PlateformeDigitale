@@ -1,0 +1,36 @@
+{% for label, messages in app.flashes %}
+	{% for message in messages %}
+		<div id="flash-message-{{ loop.index }}" class="
+						            {% if label == 'success' %}
+						                bg-green-100 border-t border-b border-green-500 text-green-700
+						            {% elseif label == 'error' %}
+						                bg-red-100 border-t border-b border-red-500 text-red-700
+						            {% elseif label == 'info' %}
+						                bg-blue-100 border-t border-b border-blue-500 text-blue-700
+						            {% elseif label == 'warning' %}
+						                bg-yellow-100 border-t border-b border-yellow-500 text-yellow-700
+						            {% endif %}
+						            px-4 py-3 flex justify-between items-center" role="alert">
+			<div>
+				<p class="font-bold">{{ label | trans }}</p>
+				<p class="text-sm">{{ message | trans }}</p>
+			</div>
+			<!-- Bouton de fermeture -->
+			<button onclick="closeFlashMessage('flash-message-{{ loop.index }}')" class="ml-4 text-white hover:text-gray-400">
+				×
+			</button>
+		</div>
+
+		<!-- Script pour gestion de la fermeture du message -->
+		<script>
+
+			// Fonction pour fermer le message flash
+function closeFlashMessage(id) {
+var flashMessage = document.getElementById(id);
+if (flashMessage) {
+flashMessage.style.display = 'none';
+}
+}
+		</script>
+	{% endfor %}
+{% endfor %}

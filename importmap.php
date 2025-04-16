@@ -39,4 +39,8 @@ return [
         'version' => '4.0.17',
         'type' => 'css',
     ],
+    'stars' => [
+        'path' => './assets/js/stars.js',
+        'entrypoint' => true,
+    ],
 ];

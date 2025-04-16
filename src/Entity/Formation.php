@@ -101,6 +101,12 @@ class Formation
     #[ORM\OneToMany(mappedBy: 'formation', targetEntity: Progression::class, orphanRemoval: true)]
     private Collection $progressions;
 
+    /**
+     * @var Collection<int, Review>
+     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'formation')]
+    private Collection $reviews;
+
 
     /**
      * @return string
@@ -118,6 +124,7 @@ class Formation
         $this->userFormations = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->progressions = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 
     public function updateTotalDuration(): void
@@ -529,6 +536,36 @@ class Formation
             // set the owning side to null (unless already changed)
             if ($progression->getFormation() === $this) {
                 $progression->setFormation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): static
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews->add($review);
+            $review->setFormation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): static
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getFormation() === $this) {
+                $review->setFormation(null);
             }
         }
 

@@ -49,11 +49,6 @@
 					Caméléon Solution (services numériques)
 				</a>
 			</li>
-			{% if is_granted('ROLE_ADMIN') %}
-				<li>
-					<a href="{{ path('admin') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Admin</a>
-				</li>
-			{% endif %}
 			<li>
 				<a href="{{ path('legal_mentions') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Mentions légales</a>
 			</li>
@@ -64,7 +59,7 @@
 
 <div class="mt-6 text-center text-xs text-[#032b35]/70 px-4">
 	<p class="mb-2">
-		Caméléon Solutions Learning est un organisme de formation certifié Qualiopi avec la BGE Incubatest.
+		Caméléon Solutions Learning est certifié Qualiopi avec la BGE Incubatest.
 	</p>
 	<img src="{{ asset('img/qualiopiBGE.jpeg') }}" alt="Logo Qualiopi BGE" class="h-16 w-auto mx-auto mb-2">
 

@@ -4,9 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Quiz;
 use App\Entity\User;
-use App\Entity\Module;
-use App\Entity\Question;
 use App\Entity\Answer;
+use App\Entity\Module;
+use App\Entity\Review;
+use App\Entity\Question;
 use App\Entity\Formation;
 use App\Entity\UserFormation;   
 use Symfony\Component\HttpFoundation\Response;
@@ -62,6 +63,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Réponses', 'fas fa-check', Answer::class);
         yield MenuItem::linkToCrud('Quiz', 'fas fa-question-circle', Quiz::class);
         yield MenuItem::linkToCrud('Inscriptions', 'fas fa-user-check', UserFormation::class);
+        yield MenuItem::linkToCrud('Avis', 'fas fa-star', Review::class);
 
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'homepage');

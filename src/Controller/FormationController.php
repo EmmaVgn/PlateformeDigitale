@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Review;
+use App\Form\ReviewType;
 use App\Entity\UserFormation;
+use App\Repository\ReviewRepository;
 use App\Repository\FormationRepository;
 use App\Repository\ModuleViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ProgressionRepository;
-use App\Repository\QuizCompletionRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\QuizCompletionRepository;
+use App\Repository\UserFormationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,38 +46,44 @@ class FormationController extends AbstractController
     
 
     #[Route('/formation/{slug}', name: 'app_formation_show')]
-    public function show(string $slug, FormationRepository $formationRepository, ProgressionRepository $progressionRepository, ModuleViewRepository $moduleViewRepository, QuizCompletionRepository $quizCompletionRepository): Response
-    {
+    public function show(
+        string $slug, 
+        FormationRepository $formationRepository, 
+        ProgressionRepository $progressionRepository, 
+        ModuleViewRepository $moduleViewRepository, 
+        QuizCompletionRepository $quizCompletionRepository,     
+        Request $request,   
+        ReviewRepository $reviewRepository,
+        EntityManagerInterface $entityManager,
+        UserFormationRepository $userFormationRepository
+    ): Response {
         $formation = $formationRepository->findOneBy(['slug' => $slug]);
         
-
         if (!$formation || !$formation->isPublished()) {
             throw $this->createNotFoundException('Formation introuvable.');
         }
-
+    
         $inscriptionValide = false;
         $inscription = null;
-
+    
         if ($this->getUser()) {
             foreach ($formation->getInscriptions() as $item) {
                 if ($item->getUser() === $this->getUser()) {
                     $inscription = $item;
-                    if ($item->getisValidated()) {
+                    if ($item->getIsValidated()) {
                         $inscriptionValide = true;
                     }
                     break;
                 }
             }
         }
-
+    
         $progression = $progressionRepository->findOneBy([
             'user' => $this->getUser(),
             'formation' => $formation
         ]);
-
         $progress = $progression ? $progression->getProgress() : 0;
-
-        
+    
         $modules = $formation->getModules();
         $totalMinutes = 0;
         $userMinutes = 0;
@@ -84,22 +94,14 @@ class FormationController extends AbstractController
                 'module' => $module
             ]);
         
-            foreach ($modules as $module) {
-                $moduleViewed = $moduleViewRepository->findOneBy([
-                    'user' => $this->getUser(),
-                    'module' => $module
-                ]);
-            
-                foreach ($module->getPdfs() as $pdf) {
-                    $duration = $pdf->getEstimatedDuration() ?? 0;
-                    $totalMinutes += $duration;
-            
-                    if ($moduleViewed) {
-                        $userMinutes += $duration;
-                    }
+            foreach ($module->getPdfs() as $pdf) {
+                $duration = $pdf->getEstimatedDuration() ?? 0;
+                $totalMinutes += $duration;
+        
+                if ($moduleViewed) {
+                    $userMinutes += $duration;
                 }
             }
-            
         }
         
         $quizCompletions = $quizCompletionRepository->findBy(['user' => $this->getUser()]);
@@ -114,11 +116,42 @@ class FormationController extends AbstractController
             }
         }
         
-    
         $remainingMinutes = max(0, $totalMinutes - $userMinutes);
-     
-
-
+        $reviews = $reviewRepository->findBy(['formation' => $formation, 'isValidated' => true], ['createdAt' => 'DESC']);
+    
+        // Calcul de la moyenne des avis
+        $averageRating = count($reviews) > 0
+            ? array_sum(array_map(fn(Review $review) => $review->getRating(), $reviews)) / count($reviews)
+            : 0;
+    
+        // Créer un nouveau commentaire
+        $review = new Review();
+        $review->setFormation($formation); // Associer le commentaire à la formation
+    
+        // Lier l'avis à l'utilisateur authentifié
+        $review->setUser($this->getUser()); // Ajout de cette ligne
+    
+        $form = $this->createForm(ReviewType::class, $review);
+        $form->handleRequest($request);
+    
+        // Vérifier si le formulaire a été soumis et est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Ajoutez une vérification pour rating ici
+            if (null === $review->getRating()) {
+                $review->setRating(0); // Valeur par défaut si rating est null
+            }
+            $review->setCreatedAt(new \DateTimeImmutable());
+            $review->setIsValidated(false); // Par défaut, les commentaires ne sont pas validés
+            $entityManager->persist($review);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre commentaire a été soumis et sera visible après validation.');
+            return $this->redirectToRoute('app_formation_show', [
+                'slug' => $formation->getSlug(),
+            ]);
+        } else {
+            $this->addFlash('error', 'Il y a eu un problème avec votre commentaire. Veuillez réessayer.');
+        }
+    
         return $this->render('formation/show.html.twig', [
             'formation' => $formation,
             'inscription' => $inscription,
@@ -127,8 +160,12 @@ class FormationController extends AbstractController
             'modules' => $modules,
             'totalDuration' => $totalMinutes,
             'remainingDuration' => $remainingMinutes,
+            'averageRating' => $averageRating,
+            'ReviewForm' => $form->createView(),
+            'reviews' => $reviews,
         ]);
     }
+    
 
     #[Route('/formations/{slug}/inscription', name: 'formation_inscription')]
     public function inscription(

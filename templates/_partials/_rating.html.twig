@@ -1,0 +1,5 @@
+<div class="star-rating">
+	{% for i in 1..5 %}
+		<i class="fas {% if i <= rating %}fas{% else %}far{% endif %}" data-rating="{{ i }}"></i>
+	{% endfor %}
+</div>
