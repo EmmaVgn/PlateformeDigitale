@@ -238,7 +238,8 @@ class FormationController extends AbstractController
         $inscription->setFormation($formation);
 
         $inscription->setIsCompleted(false);
-    
+        $formation->addUser($user);  // Ajouter l'utilisateur à la formation
+
         $em->persist($inscription);
         $em->flush();
     
