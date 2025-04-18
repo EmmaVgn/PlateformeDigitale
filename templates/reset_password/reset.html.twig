@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau mot de passe
+{% endblock %}
+
+{% block body %}
+	<section class="py-20 px-6 bg-[#f5f5e9] text-[#032b35]">
+		<div class="max-w-md mx-auto">
+			<h1 class="text-3xl font-title text-center font-bold mb-6 text-primary">
+				Définir un nouveau mot de passe
+			</h1>
+
+			<p class="text-center text-gray-700 mb-8 font-body">
+				Choisissez un mot de passe sécurisé pour accéder à votre compte.
+			</p>
+
+			{{ form_start(resetForm, {'attr': {'class': 'space-y-6'}}) }}
+			{{ form_row(resetForm.plainPassword, {
+                label: 'Nouveau mot de passe',
+                label_attr: {'class': 'block text-sm font-medium text-gray-700'},
+                attr: {
+                    'class': 'w-full border border-gray-300 p-3 rounded font-body',
+                    'placeholder': 'Nouveau mot de passe'
+                }
+            }) }}
+
+			<div class="text-center">
+				<button type="submit" class="bg-[#085669] hover:bg-[#064b57] text-white py-2 px-6 rounded transition">
+					Réinitialiser mon mot de passe
+				</button>
+			</div>
+			{{ form_end(resetForm) }}
+		</div>
+	</section>
+{% endblock %}
