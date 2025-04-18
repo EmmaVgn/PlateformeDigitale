@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formations pour particuliers
+{% endblock %}
+
+{% block body %}
+	<section class="py-20 px-6 bg-[#f5f5e9] text-[#032b35]">
+		<div class="max-w-5xl mx-auto text-center">
+			<h1 class="text-3xl font-bold mb-10">Choisissez une catégorie</h1>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{% for categorie in categories %}
+					<a href="{{ path('formations_par_categorie', { slug: categorie.slug }) }}" class="group bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center border border-transparent hover:border-[#085669]">
+
+						<div class="flex justify-center mb-4">
+							<div class="p-4 rounded-full bg-[#eef2f3] group-hover:bg-[#085669] transition">
+								<i class="{{ categorie.icone }} text-3xl text-[#085669] group-hover:text-white transition"></i>
+							</div>
+						</div>
+
+						<h2 class="text-xl font-semibold mb-2 group-hover:text-[#085669] transition">{{ categorie.name }}</h2>
+						<p class="text-sm text-gray-600 group-hover:text-[#032b35] transition">{{ categorie.description }}</p>
+					</a>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+{% endblock %}

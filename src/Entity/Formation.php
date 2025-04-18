@@ -107,6 +107,13 @@ class Formation
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'formation')]
     private Collection $reviews;
 
+    #[ORM\Column(type: 'string', length: 20)]
+    private string $type;
+
+    #[ORM\ManyToOne(inversedBy: 'formation')]
+    private ?Categorie $categorie = null; 
+
+
 
     /**
      * @return string
@@ -568,6 +575,29 @@ class Formation
                 $review->setFormation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): static
+    {
+        $this->categorie = $categorie;
 
         return $this;
     }

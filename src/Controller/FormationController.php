@@ -6,7 +6,12 @@ use App\Entity\Review;
 use App\Form\ReviewType;
 use App\Entity\UserFormation;
 use App\Service\SendMailService;
+use App\Entity\DemandeEntreprise;
+use App\Service\FormationService;
+use Symfony\Component\Mime\Email;
+use App\Form\ContactEntrepriseType;
 use App\Repository\ReviewRepository;
+use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
 use App\Repository\ModuleViewRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +20,7 @@ use App\Repository\UserFormationRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\QuizCompletionRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -246,6 +252,71 @@ class FormationController extends AbstractController
         $this->addFlash('success', 'Vous êtes maintenant inscrit à cette formation.');
     
         return $this->redirectToRoute('app_formation_show', ['slug' => $slug]);
+    }
+
+    #[Route('/formations/individuel', name: 'formations_individuelles')]
+    public function formationsIndividuelles(CategorieRepository $categorieRepository): Response
+    {
+        $categories = $categorieRepository->findAll();
+    
+        return $this->render('formation/individuelles.html.twig', [
+            'categories' => $categories,
+        ]);
+    }
+
+    #[Route('/formations/entreprise', name: 'formations_entreprise')]
+    public function formationsEntreprise(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer
+    ): Response {
+        $demande = new DemandeEntreprise();
+        $form = $this->createForm(ContactEntrepriseType::class, $demande);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $demande->setCreatedAt(new \DateTimeImmutable());
+            $entityManager->persist($demande);
+            $entityManager->flush();
+    
+            // Envoi de l'e-mail
+            $email = (new Email())
+                ->from($demande->getEmail())
+                ->to('tonadresse@email.com') // ← à remplacer par ton adresse pro
+                ->subject('Nouvelle demande entreprise')
+                ->text("Nom : " . $demande->getName() . "\n"
+                     . "Entreprise : " . $demande->getEntreprise() . "\n"
+                     . "Email : " . $demande->getEmail() . "\n"
+                     . "Message : \n" . $demande->getMessage());
+    
+            $mailer->send($email);
+    
+            $this->addFlash('success', 'Votre demande a bien été envoyée.');
+            return $this->redirectToRoute('formations_entreprise');
+        }
+    
+        return $this->render('formation/entreprise.html.twig', [
+            'contactForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/formations/categorie/{slug}', name: 'formations_par_categorie')]
+    public function formationsParCategorie(
+        CategorieRepository $categorieRepository,
+        string $slug
+    ): Response {
+        $categorie = $categorieRepository->findOneBy(['slug' => $slug]);
+
+        if (!$categorie) {
+            throw $this->createNotFoundException('Catégorie non trouvée');
+        }
+
+        $formations = $categorie->getFormation(); // via OneToMany dans l'entité
+
+        return $this->render('formation/categorie.html.twig', [
+            'categorie' => $categorie,
+            'formations' => $formations,
+        ]);
     }
 
 

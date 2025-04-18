@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% if type == 'individuel' %}
+		Formations Individuelles
+	{% else %}
+		Formations Entreprise
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>
+			{% if type == 'individuel' %}
+				Formations pour particuliers
+			{% else %}
+				Formations pour entreprises
+			{% endif %}
+		</h1>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{% for formation in formations %}
+				<div class="border p-4 rounded-xl shadow hover:shadow-lg transition">
+					<h2 class="text-lg font-semibold">{{ formation.nom }}</h2>
+					<p>{{ formation.objectifFormation }}</p>
+					<a href="{{ path('app_formation_show', { id: formation.id }) }}" class="underline text-sm">
+						En savoir plus
+					</a>
+				</div>
+			{% else %}
+				<p>Aucune formation disponible pour ce type.</p>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

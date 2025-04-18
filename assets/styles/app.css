@@ -310,3 +310,37 @@ select:focus {
   padding: 10px;
   text-align: center;
 }
+
+/*Homepage*/
+.bg-primary {
+  background-color: #032b35;
+}
+.text-light {
+  color: #f5f5e9;
+}
+.text-hover {
+  color: #c2a47f; /* couleur or douce ? */
+}
+.btn-glossy {
+  position: relative;
+  overflow: hidden;
+}
+.btn-glossy::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-25deg);
+  transition: left 0.5s;
+}
+.btn-glossy:hover::after {
+  left: 150%;
+}
+
+.hero-section {
+  height: 100%;
+  width: 100%;
+}

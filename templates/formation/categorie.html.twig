@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formations par catégorie
+{% endblock %}
+{% block body %}
+	<section class="py-20 px-6 md:px-12 bg-[#f5f5e9] text-[#032b35]">
+		<div class="max-w-6xl mx-auto text-center">
+			<h1 class="text-4xl font-bold mb-4">Formations :
+				{{ categorie.name }}</h1>
+			<p class="text-lg text-gray-700 max-w-2xl mx-auto mb-12">{{ categorie.description }}</p>
+
+			{% if formations|length > 0 %}
+				<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+					{% for formation in formations %}
+						<div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition relative group">
+							<div class="absolute top-4 right-4 text-[#085669] group-hover:scale-110 transition">
+								<i class="fas fa-graduation-cap text-xl"></i>
+							</div>
+							<h2 class="text-2xl font-semibold mb-2 mt-4 text-[#032b35]">{{ formation.title }}</h2>
+							<p class="text-sm text-gray-600 mb-6 m-2">
+								{{ formation.objectifDeFormation|length > 120
+        ? formation.objectifDeFormation|slice(0, 120)|raw ~ '…'
+        : formation.objectifDeFormation|raw }}
+							</p>
+							<a href="{{ path('app_formation_show', { slug: formation.slug, id: formation.id }) }}" class="inline-block mt-4 bg-[#085669] text-white px-5 py-2 rounded-lg hover:bg-[#064b57] transition">
+								Voir la formation
+							</a>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<p class="text-center text-gray-500 mt-12">Aucune formation dans cette catégorie pour le moment.</p>
+			{% endif %}
+		</div>
+	</section>
+{% endblock %}

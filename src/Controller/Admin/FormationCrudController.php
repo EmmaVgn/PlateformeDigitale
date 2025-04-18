@@ -52,7 +52,10 @@ class FormationCrudController extends AbstractCrudController
                     'by_reference' => false, // Permet de lier plusieurs quiz à une formation
                     'multiple' => true, // Permet d'associer plusieurs quiz
                     'required' => false, // Optionnel : mettre à true si vous voulez que ce champ soit obligatoire
-                ])
+                ]),
+            AssociationField::new('categorie')
+                ->setHelp('Sélectionnez la catégorie de cette formation'),
+            
         ];
     }
 }

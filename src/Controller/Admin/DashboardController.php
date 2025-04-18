@@ -8,8 +8,10 @@ use App\Entity\Answer;
 use App\Entity\Module;
 use App\Entity\Review;
 use App\Entity\Question;
+use App\Entity\Categorie;
 use App\Entity\Formation;
 use App\Entity\UserFormation;   
+use App\Entity\DemandeEntreprise;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -64,6 +66,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Quiz', 'fas fa-question-circle', Quiz::class);
         yield MenuItem::linkToCrud('Inscriptions', 'fas fa-user-check', UserFormation::class);
         yield MenuItem::linkToCrud('Avis', 'fas fa-star', Review::class);
+        yield MenuItem::linkToCrud('Demandes entreprise', 'fas fa-building', DemandeEntreprise::class);
+        yield MenuItem::linkToCrud('Catégories', 'fas fa-folder-open', Categorie::class);
 
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'homepage');

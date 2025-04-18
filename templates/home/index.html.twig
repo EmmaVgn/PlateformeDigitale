@@ -4,44 +4,12 @@
 {% endblock %}
 
 {% block body %}
-	<section class="w-full bg-animated bg-primary text-light ">
-		<div class="max-w-screen-xl mx-auto px-4 py-16 flex flex-col lg:flex-row items-center">
+	{% include "home/_hero.html.twig" %}
 
 
-			<div class="w-full lg:w-1/2 mb-8 lg:mb-0">
-				<img src="{{ asset('img/Cameleon_L_Blanc-BGT.png') }}" alt="Illustration" class="w-[30%] max-w-md mx-auto lg:mx-0">
-			</div>
-
-
-			<div class="w-full lg:w-1/2 text-center lg:text-left">
-				<h1 class="text-3xl md:text-4xl font-title text-light mb-4 leading-tight">
-					Construisez votre avenir avec<br>
-					<strong class="text-hover">Cameleon Solutions Learning</strong>
-				</h1>
-				<div class="flex flex-wrap gap-4 mt-6 mb-6">
-					<a href="{{ path('app_formations') }}" class="btn-glossy flex-1 min-w-[160px] py-3 px-6 bg-hover hover:bg-secondary text-white text-sm font-medium text-center rounded transition outline outline-2 outline-white outline-offset-2">
-						Découvrir les formations
-					</a>
-					<a href="mailto:contact@cameleon-solutions.fr" class="btn-glossy flex-1 min-w-[160px] py-3 px-6 bg-hover hover:bg-secondary text-white text-sm font-medium text-center rounded transition outline outline-2 outline-white outline-offset-2">
-						Me contacter
-					</a>
-				</div>
-
-
-				<br>
-				<p class="mt-4">🎓 Plateforme de formation par
-					<a href="https://www.cameleon-solutions.fr" class="underline hover:text-hover" target="_blank">
-						Caméléon Solution
-					</a>
-				</p>
-
-			</div>
-
-		</div>
+	<section class="py-1 px-4">
+		{% include "home/_choice_type.html.twig" %}
 	</section>
 
 
-	<section class="py-14 px-4">
-		{% include "home/_popular_formation.html.twig" %}
-	</section>
 {% endblock %}

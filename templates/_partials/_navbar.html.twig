@@ -1,5 +1,5 @@
 <header class="bg-light shadow-md font-body text-primary">
-	<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+	<div class=" mx-auto px-4 py-3 flex justify-between items-center">
 
 		<a href="{{ path('homepage') }}" class="flex items-center space-x-2">
 			<img src="{{ asset('img/Cameleon-noir.svg') }}" alt="Logo" class="h-12 w-auto">
@@ -9,18 +9,18 @@
 		<div class="hidden lg:flex flex-1 justify-center items-center gap-6">
 			<nav class="flex gap-6">
 				<a href="{{ path('homepage') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full
-																																										   {{ app.request.attributes.get('_route') == 'homepage' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																   {{ app.request.attributes.get('_route') == 'homepage' ? 'underline underline-offset-4 font-semibold' : '' }}">
 					Accueil
 				</a>
 
 
 				<a href="{{ path('app_formations') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																																																										   {{ app.request.attributes.get('_route') == 'app_formations' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																																																																   {{ app.request.attributes.get('_route') == 'app_formations' ? 'underline underline-offset-4 font-semibold' : '' }}">
 					Formations
 				</a>
 
 				<a href="{{ path('app_forum') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																																																										   {{ app.request.attributes.get('_route') == 'app_forum' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																																																																   {{ app.request.attributes.get('_route') == 'app_forum' ? 'underline underline-offset-4 font-semibold' : '' }}">
 					Forum
 				</a>
 
@@ -29,13 +29,13 @@
 					<span class="text-sm">Bonjour,
 						{{ app.user.firstname }}</span>
 					<a href="{{ path('profile') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																																																																		   {{ app.request.attributes.get('_route') == 'profile' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																																																																									   {{ app.request.attributes.get('_route') == 'profile' ? 'underline underline-offset-4 font-semibold' : '' }}">
 						📊 Tableau de bord
 					</a>
 
 					{% if is_granted('ROLE_ADMIN') %}
 						<a href="{{ path('admin') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																																																																																       {{ app.request.attributes.get('_route') == 'admin' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																																																																																								       {{ app.request.attributes.get('_route') == 'admin' ? 'underline underline-offset-4 font-semibold' : '' }}">
 							🛠️ Admin
 						</a>
 					{% endif %}
@@ -47,7 +47,7 @@
 						Connexion
 					</a>
 					<a href="{{ path('app_register') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-							   {{ app.request.attributes.get('_route') == 'app_register' ? 'underline underline-offset-4 font-semibold' : '' }}">
+														   {{ app.request.attributes.get('_route') == 'app_register' ? 'underline underline-offset-4 font-semibold' : '' }}">
 						Inscription
 					</a>
 				{% endif %}
@@ -60,12 +60,12 @@
 
 	<div class="lg:hidden hidden flex flex-col space-y-4 px-4 pb-6 text-base" id="mobile-menu">
 		<a href="{{ path('homepage') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																								   {{ app.request.attributes.get('_route') == 'homepage' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																												   {{ app.request.attributes.get('_route') == 'homepage' ? 'underline underline-offset-4 font-semibold' : '' }}">
 			Accueil
 		</a>
 
 		<a href="{{ path('app_formations') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																								   {{ app.request.attributes.get('_route') == 'app_formations' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																												   {{ app.request.attributes.get('_route') == 'app_formations' ? 'underline underline-offset-4 font-semibold' : '' }}">
 			Formations
 		</a>
 
@@ -74,13 +74,13 @@
 				{{ app.user.firstname }}</span>
 
 			<a href="{{ path('profile') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																	   {{ app.request.attributes.get('_route') == 'profile' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																						   {{ app.request.attributes.get('_route') == 'profile' ? 'underline underline-offset-4 font-semibold' : '' }}">
 				📊 Tableau de bord
 			</a>
 
 			{% if is_granted('ROLE_ADMIN') %}
 				<a href="{{ path('admin') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																										   {{ app.request.attributes.get('_route') == 'admin' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																																   {{ app.request.attributes.get('_route') == 'admin' ? 'underline underline-offset-4 font-semibold' : '' }}">
 					🛠️ Admin
 				</a>
 			{% endif %}
@@ -90,12 +90,12 @@
 			</a>
 		{% else %}
 			<a href="{{ path('app_login') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																	   {{ app.request.attributes.get('_route') == 'app_login' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																						   {{ app.request.attributes.get('_route') == 'app_login' ? 'underline underline-offset-4 font-semibold' : '' }}">
 				Connexion
 			</a>
 
 			<a href="{{ path('app_register') }}" class="relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full
-																																																	   {{ app.request.attributes.get('_route') == 'app_register' ? 'underline underline-offset-4 font-semibold' : '' }}">
+																																																						   {{ app.request.attributes.get('_route') == 'app_register' ? 'underline underline-offset-4 font-semibold' : '' }}">
 				Inscription
 			</a>
 		{% endif %}
