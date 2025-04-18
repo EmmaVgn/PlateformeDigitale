@@ -111,7 +111,13 @@ class Formation
     private string $type;
 
     #[ORM\ManyToOne(inversedBy: 'formation')]
-    private ?Categorie $categorie = null; 
+    private ?Categorie $categorie = null;
+
+    /**
+     * @var Collection<int, FeedbackFormation>
+     */
+    #[ORM\OneToMany(targetEntity: FeedbackFormation::class, mappedBy: 'formation')]
+    private Collection $feedbackFormations; 
 
 
 
@@ -132,6 +138,7 @@ class Formation
         $this->users = new ArrayCollection();
         $this->progressions = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->feedbackFormations = new ArrayCollection();
     }
 
     public function updateTotalDuration(): void
@@ -598,6 +605,36 @@ class Formation
     public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FeedbackFormation>
+     */
+    public function getFeedbackFormations(): Collection
+    {
+        return $this->feedbackFormations;
+    }
+
+    public function addFeedbackFormation(FeedbackFormation $feedbackFormation): static
+    {
+        if (!$this->feedbackFormations->contains($feedbackFormation)) {
+            $this->feedbackFormations->add($feedbackFormation);
+            $feedbackFormation->setFormation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedbackFormation(FeedbackFormation $feedbackFormation): static
+    {
+        if ($this->feedbackFormations->removeElement($feedbackFormation)) {
+            // set the owning side to null (unless already changed)
+            if ($feedbackFormation->getFormation() === $this) {
+                $feedbackFormation->setFormation(null);
+            }
+        }
 
         return $this;
     }

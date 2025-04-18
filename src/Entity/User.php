@@ -52,13 +52,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $formationsSouhaitees = null;
 
-   /**
+    /**
      * @var Collection<int, Formation>
      */
     #[ORM\ManyToMany(targetEntity: Formation::class, inversedBy: 'users')]
     #[ORM\JoinTable(name: 'user_formations')]
     private Collection $formations;
-    
+
     /**
      * @var Collection<int, UserFormation>
      */
@@ -85,13 +85,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: ForumMessage::class, mappedBy: 'author')]
     private Collection $forumMessages;
-
+    
     /**
      * @var Collection<int, Review>
      */
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'user')]
     private Collection $reviews;
-        
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: FeedbackFormation::class)]
+    private Collection $feedbackFormations;
+
     public function __construct()
     {
         $this->userFormations = new ArrayCollection();
@@ -101,14 +104,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->forumTopics = new ArrayCollection();
         $this->forumMessages = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->feedbackFormations = new ArrayCollection();
     }
 
-    /**
-     * Méthode __toString() pour afficher le nom complet de l'utilisateur
-     */
     public function __toString(): string
     {
-        return $this->firstname . ' ' . $this->lastname;  // Retourne le prénom et nom
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function getId(): ?int
@@ -124,7 +125,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -145,9 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
@@ -157,7 +155,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -172,26 +169,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-
+    /**
+     * @see UserInterface
+     */
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
+
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
         return $this;
     }
-    /**
-     * @see UserInterface
-     */
+
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
 
@@ -203,7 +199,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
-
         return $this;
     }
 
@@ -215,7 +210,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFirstname(string $firstname): static
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -227,7 +221,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
-
         return $this;
     }
 
@@ -239,7 +232,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -254,33 +246,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-        public function getUserFormations(): Collection
-    {
-        return $this->userFormations;
-    }
-
-    public function addUserFormation(UserFormation $userFormation): self
-    {
-        if (!$this->userFormations->contains($userFormation)) {
-            $this->userFormations[] = $userFormation;
-            $userFormation->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserFormation(UserFormation $userFormation): self
-    {
-        if ($this->userFormations->removeElement($userFormation)) {
-            // set the owning side to null (unless already changed)
-            if ($userFormation->getUser() === $this) {
-                $userFormation->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getFormations(): Collection
     {
         return $this->formations;
@@ -291,14 +256,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->formations->contains($formation)) {
             $this->formations[] = $formation;
         }
-
         return $this;
     }
 
     public function removeFormation(Formation $formation): self
     {
         $this->formations->removeElement($formation);
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, UserFormation>
+     */
+    public function getUserFormations(): Collection
+    {
+        return $this->userFormations;
+    }
+
+    public function addUserFormation(UserFormation $userFormation): self
+    {
+        if (!$this->userFormations->contains($userFormation)) {
+            $this->userFormations[] = $userFormation;
+            $userFormation->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeUserFormation(UserFormation $userFormation): self
+    {
+        if ($this->userFormations->removeElement($userFormation)) {
+            if ($userFormation->getUser() === $this) {
+                $userFormation->setUser(null);
+            }
+        }
         return $this;
     }
 
@@ -316,19 +306,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->userAnswers->add($userAnswer);
             $userAnswer->setUser($this);
         }
-
         return $this;
     }
 
     public function removeUserAnswer(UserAnswer $userAnswer): static
     {
         if ($this->userAnswers->removeElement($userAnswer)) {
-            // set the owning side to null (unless already changed)
             if ($userAnswer->getUser() === $this) {
                 $userAnswer->setUser(null);
             }
         }
-
         return $this;
     }
 
@@ -336,6 +323,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->progressions;
     }
+
 
     /**
      * @return Collection<int, ForumTopic>
@@ -351,23 +339,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->forumTopics->add($forumTopic);
             $forumTopic->setAuthor($this);
         }
-
         return $this;
     }
 
     public function removeForumTopic(ForumTopic $forumTopic): static
     {
         if ($this->forumTopics->removeElement($forumTopic)) {
-            // set the owning side to null (unless already changed)
             if ($forumTopic->getAuthor() === $this) {
                 $forumTopic->setAuthor(null);
             }
         }
-
         return $this;
     }
 
-    /**
+     /**
      * @return Collection<int, ForumMessage>
      */
     public function getForumMessages(): Collection
@@ -381,19 +366,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->forumMessages->add($forumMessage);
             $forumMessage->setAuthor($this);
         }
-
         return $this;
     }
 
     public function removeForumMessage(ForumMessage $forumMessage): static
     {
         if ($this->forumMessages->removeElement($forumMessage)) {
-            // set the owning side to null (unless already changed)
             if ($forumMessage->getAuthor() === $this) {
                 $forumMessage->setAuthor(null);
             }
         }
-
         return $this;
     }
 
@@ -411,19 +393,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->reviews->add($review);
             $review->setUser($this);
         }
-
         return $this;
     }
 
     public function removeReview(Review $review): static
     {
         if ($this->reviews->removeElement($review)) {
-            // set the owning side to null (unless already changed)
             if ($review->getUser() === $this) {
                 $review->setUser(null);
             }
         }
+        return $this;
+    }
 
+    public function getFeedbackFormations(): Collection
+    {
+        return $this->feedbackFormations;
+    }
+
+    public function addFeedbackFormation(FeedbackFormation $feedback): static
+    {
+        if (!$this->feedbackFormations->contains($feedback)) {
+            $this->feedbackFormations->add($feedback);
+            $feedback->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeFeedbackFormation(FeedbackFormation $feedback): static
+    {
+        if ($this->feedbackFormations->removeElement($feedback)) {
+            if ($feedback->getUser() === $this) {
+                $feedback->setUser(null);
+            }
+        }
         return $this;
     }
 }
