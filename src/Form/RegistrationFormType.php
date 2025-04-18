@@ -75,6 +75,23 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('plainPasswordConfirm', PasswordType::class, [
+                'mapped' => false,
+                'label' => 'Confirmer le mot de passe',
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Merci de confirmer votre mot de passe.',
+                    ]),
+                ],
+            ])
+            ->add('agreeRgpd', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'J’autorise Caméléon Solutions Learning à stocker et traiter mes données dans le cadre de ma demande d’inscription.',
+                'constraints' => [
+                    new IsTrue(['message' => 'Vous devez accepter la politique de confidentialité.']),
+                ],
+            ]);
         ;
     }
 

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact
+{% endblock %}
+
+{% block body %}
+	<section class="py-20 px-6 bg-[#f5f5e9] text-[#032b35]">
+		<div class="max-w-3xl container mx-auto">
+			<h1 class="text-4xl font-title text-center mb-8">Contactez-nous</h1>
+			<p class="text-center text-lg font-body mb-12">Une question, une demande ? Écrivez-nous, nous vous répondrons rapidement.</p>
+
+			{% for message in app.flashes('success') %}
+				<div class="bg-green-100 text-green-700 p-4 rounded mb-6 text-center">
+					{{ message }}
+				</div>
+			{% endfor %}
+
+			{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+			<div>
+				{{ form_label(form.name, 'Nom') }}
+				{{ form_widget(form.name, {
+        'attr': {
+            'class': 'w-full border border-gray-300 p-3 rounded font-body'
+        }
+    }) }}
+				{{ form_errors(form.name) }}
+			</div>
+			<div>
+				{{ form_label(form.email, 'Email') }}
+				{{ form_widget(form.email, {'attr': {'class': 'w-full border border-gray-300 p-3 rounded'}}) }}
+				{{ form_errors(form.email) }}
+			</div>
+			<div>
+				{{ form_label(form.message, 'Message') }}
+				{{ form_widget(form.message, {'attr': {'class': 'w-full border border-gray-300 p-3 rounded'}}) }}
+				{{ form_errors(form.message) }}
+			</div>
+			<div class="text-center">
+				<button type="submit" class="bg-[#085669] text-white px-6 py-3 rounded hover:bg-[#064b57] transition">
+					Envoyer le message
+				</button>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</section>
+{% endblock %}

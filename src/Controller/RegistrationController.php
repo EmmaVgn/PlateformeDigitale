@@ -3,20 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use App\Form\RegistrationFormType;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Form\FormError;
 use App\Security\LoginFormAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -36,6 +37,16 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $password = $form->get('plainPassword')->getData();
+            $confirm  = $form->get('plainPasswordConfirm')->getData();
+        
+            if ($password !== $confirm) {
+                $form->get('plainPasswordConfirm')->addError(new FormError('Les mots de passe ne correspondent pas.'));
+            }
+        }
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode le mot de passe
@@ -68,7 +79,7 @@ class RegistrationController extends AbstractController
             $mailer->send($adminNotification);
 
             // Connexion automatique après l'inscription
-            $this->addFlash('success', 'Merci pour votre inscription. Un email de confirmation vous a été envoyé.');
+            $this->addFlash('success', 'Merci pour votre inscription. Un email de confirmation vous a été envoyé. Veuillez vérifier dans vos spams si vous ne le voyez pas.');
             return $this->redirectToRoute('app_login');
 
         }

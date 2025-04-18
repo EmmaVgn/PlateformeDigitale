@@ -10,6 +10,7 @@ use App\Entity\Review;
 use App\Entity\Question;
 use App\Entity\Categorie;
 use App\Entity\Formation;
+use App\Entity\MessageContact;
 use App\Entity\UserFormation;   
 use App\Entity\DemandeEntreprise;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,6 +69,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Avis', 'fas fa-star', Review::class);
         yield MenuItem::linkToCrud('Demandes entreprise', 'fas fa-building', DemandeEntreprise::class);
         yield MenuItem::linkToCrud('Catégories', 'fas fa-folder-open', Categorie::class);
+        yield MenuItem::linkToCrud('Messages reçus', 'fas fa-envelope', MessageContact::class);
 
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', User::class);
         yield MenuItem::linkToRoute('Retour au site', 'fas fa-home', 'homepage');

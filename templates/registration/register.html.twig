@@ -45,9 +45,17 @@
 				}) }}
 
 					{{ form_row(registrationForm.plainPassword, {
+					label: 'Mot de passe',
 					label_attr: {'class': 'block text-sm font-medium text-gray-700'},
 					attr: {'class': 'mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary'}
 				}) }}
+
+					{{ form_row(registrationForm.plainPasswordConfirm, {
+					label: 'Confirmer le mot de passe',
+					label_attr: {'class': 'block text-sm font-medium text-gray-700'},
+					attr: {'class': 'mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-primary focus:border-primary'}
+				}) }}
+
 
 					{{ form_row(registrationForm.formationsSouhaitees, {
 					label_attr: {'class': 'block text-sm font-medium text-gray-700'},
@@ -59,6 +67,11 @@
 						{{ form_label(registrationForm.agreeTerms, "J'accepte les conditions générales", {'label_attr': {'class': 'ml-2 text-sm text-gray-600'}}) }}
 					</div>
 					{{ form_errors(registrationForm.agreeTerms) }}
+					<div class="flex items-center mr-2">
+						{{ form_widget(registrationForm.agreeRgpd, {'attr': {'class': 'rounded border-gray-300 text-primary shadow-sm focus:ring-primary'}}) }}
+						{{ form_label(registrationForm.agreeRgpd, null, {'label_attr': {'class': 'ml-2 text-sm text-gray-600'}}) }}
+					</div>
+					{{ form_errors(registrationForm.agreeRgpd) }}
 
 					<button type="submit" class=" bg-primary hover:bg-hover text-white py-2 px-4 rounded-md shadow transition">
 						M'inscrire
