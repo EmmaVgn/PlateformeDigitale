@@ -23,10 +23,17 @@ final class HomeController extends AbstractController
         $reviews = $reviewRepository->findBy(['isValidated' => true], ['createdAt' => 'DESC'], 3);
         $averageRating = $reviewRepository->averageRating();
 
+        $latestReviews = $reviewRepository->findBy(
+            ['isValidated' => true], // ou selon ta logique de validation
+            ['createdAt' => 'DESC'],
+            2 // les 2 derniers avis par exemple
+        );
+
         return $this->render('home/index.html.twig', [
             'formations' => $formations,
             'reviews' => $reviews,
             'averageRating' => $averageRating,
+            'latestReviews' => $latestReviews,
         ]);
     }
 

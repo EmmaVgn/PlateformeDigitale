@@ -344,3 +344,20 @@ select:focus {
   height: 100%;
   width: 100%;
 }
+@keyframes floating-arrow {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+}
+.floating-bounce {
+  animation: floating-arrow 1.8s ease-in-out infinite;
+}

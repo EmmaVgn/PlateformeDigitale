@@ -1,0 +1,17 @@
+{% if latestReviews|length > 0 %}
+	<section class="bg-[#f5f5e9] py-20 text-[#032b35] px-6">
+		<div class="max-w-4xl mx-auto text-center">
+			<h2 class="text-2xl font-title font-bold mb-10">Ce que disent nos apprenants</h2>
+			<div class="grid md:grid-cols-2 gap-6">
+				{% for review in latestReviews %}
+					<div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+						<p class="italic text-sm mb-4">“{{ review.comment }}”</p>
+						<p class="font-semibold text-sm">—
+							{{ review.user.firstname }}</p>
+					</div>
+				{% endfor %}
+			</div>
+
+		</div>
+	</section>
+{% endif %}

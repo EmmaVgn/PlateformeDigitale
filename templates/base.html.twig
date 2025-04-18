@@ -31,6 +31,10 @@
 
 		<main class="flex-1  mx-auto "> {% block body %}{% endblock %}
 			</main>
+			<button id="scrollTopBtn" class="fixed bottom-16 right-6 z-50 hidden bg-[#085669] hover:bg-[#064b57] text-white px-4 py-3 rounded-full shadow-lg transition font-bold text-xl" aria-label="Remonter en haut">
+				↑
+			</button>
+
 
 			{% include '_partials/_footer.html.twig' %}
 
